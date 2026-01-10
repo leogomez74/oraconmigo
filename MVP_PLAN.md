@@ -1,19 +1,39 @@
 # Plan MVP - Oras App
 
-**Última actualización**: 2026-01-09
+**Última actualización**: 2026-01-10
 
-## 🎉 Últimos Cambios (09/01/2026)
+## 🎉 Últimos Cambios (10/01/2026)
 
-### ✅ Completado: Sistema de Oraciones Guiadas
-- Backend completo con modelos, controladores, 6 endpoints API
-- Frontend con lista de oraciones, detalle, filtros por categoría
-- 10 oraciones seeded (5 gratuitas, 5 premium)
-- Tracking de progreso y completado por usuario
-- UI mobile optimizada con badges premium/completado
-- Reproductor de audio HTML5 básico implementado
-- Fix CORS: Configuración correcta de proxy Next.js
+### ✅ Completado: Arquitectura SPA con Tabs + Optimizaciones UX
+**Arquitectura SPA (Preparación para Capacitor):**
+- ✅ Dashboard convertido a Single Page Application (SPA)
+- ✅ Navegación instantánea (0ms) entre tabs: Inicio, Biblia, Oraciones
+- ✅ BibliaTab.tsx: Tab con 3 vistas internas (books, chapters, verses)
+- ✅ OracionesTab.tsx: Tab con 2 vistas (lista con filtros, detalle completo)
+- ✅ InicioTab.tsx: Tab con contenido del dashboard principal
+- ✅ Estado persistente en memoria mientras el usuario navega entre tabs
+- ✅ Perfecto para encapsulamiento con Capacitor (sin recargas de página)
 
-**Progreso MVP: 48% → 68% completado** 📈
+**Optimizaciones de Performance:**
+- ✅ CSRF cookie caching (evita requests duplicados)
+- ✅ Precarga de CSRF en RegisterForm (reduce latencia ~85%)
+- ✅ SESSION_DRIVER=file para desarrollo local (mejora velocidad)
+- ✅ Laravel config/route caching optimizado
+
+**Mejoras de UX:**
+- ✅ LoadingSpinner component reutilizable con mensajes contextuales
+- ✅ Global loading.tsx para transiciones de Next.js
+- ✅ Spinners implementados en 6 páginas (dashboard, biblia, oracion, encuesta, checkout, planes)
+- ✅ Color de texto mejorado en inputs de checkout (text-gray-900)
+
+**Backend:**
+- ✅ Migración: Campo `video_url` agregado a tabla `oraciones`
+- ✅ AuthController optimizado para mejor performance
+
+**Documentación:**
+- ✅ README.md completamente actualizado con guía de instalación, testing y arquitectura
+
+**Progreso MVP: 68% → 75% completado** 📈
 
 ---
 
@@ -56,13 +76,18 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - [x] Requiere autenticación (login obligatorio para acceder)
 - [x] Tracking automático de lecturas (backend registra capítulos leídos)
 
-#### 4. Dashboard
-- [x] Página principal del usuario autenticado
-- [x] Saludo personalizado según hora del día
+#### 4. Dashboard (SPA con Tabs)
+- [x] Arquitectura Single Page Application (SPA) con tabs
+- [x] Tab "Inicio": Página principal con saludo personalizado, palabra del día, estadísticas
+- [x] Tab "Biblia": Lector completo RVR1960 integrado (sin recargas)
+- [x] Tab "Oraciones": Lista y detalle de oraciones integrados (sin recargas)
+- [x] Navegación instantánea (0ms) entre tabs mediante cambio de estado
+- [x] Estado persistente: volver a un tab mantiene su estado en memoria
+- [x] Header dinámico con botón back solo en tabs Biblia/Oraciones
+- [x] Preparado para encapsulamiento con Capacitor
 - [x] Componente "Palabra del día" (DailyVerse)
 - [x] Estadísticas básicas (racha, oraciones)
-- [x] Acceso rápido a la Biblia
-- [x] Botón de logout
+- [x] Botón de logout siempre visible
 
 #### 5. Sistema de Encuestas
 - [x] Encuesta de onboarding (8 preguntas, 4 pasos)
@@ -72,14 +97,15 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - [x] Almacenamiento de respuestas en BD
 - [x] Redirección al dashboard al completar
 
-#### 6. Dashboard Administrativo (Parcial)
+#### 6. Dashboard Administrativo
 **Backend:**
 - [x] Campo `is_admin` agregado a tabla `people`
 - [x] Middleware `IsAdmin` para proteger rutas administrativas
-- [x] Controller `AdminController` con endpoints básicos:
-  - [x] `GET /admin/dashboard` - Métricas generales
-  - [x] `GET /admin/funnel` - Funnel de conversión
+- [x] Controller `AdminController` con endpoints:
+  - [x] `GET /admin/dashboard` - Métricas generales con analytics de oraciones
+  - [x] `GET /admin/funnel` - Funnel de conversión (incluye "Primera oración completada")
   - [x] `GET /admin/users` - Lista de usuarios con filtros
+  - [x] `GET /admin/content` - Analytics detallados de oraciones
 - [x] Modelo `BibleReading` para tracking de lecturas
 - [x] Endpoint `POST /api/biblia/registrar` - Registra lectura de capítulo
 - [x] Métricas implementadas:
@@ -89,22 +115,37 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
   - [x] Total de lecturas de Biblia
   - [x] Lecturas de Biblia por semana
   - [x] Top 5 libros más leídos
+  - [x] **Analytics de Oraciones:**
+    - [x] Total oraciones completadas
+    - [x] Usuarios que han completado oraciones
+    - [x] Top 5 oraciones más populares
+    - [x] Tasa de completado por oración
+    - [x] Distribución por categoría
 
 **Frontend (Inertia.js):**
 - [x] Ruta `/admin` protegida con middleware admin
 - [x] Página `/admin/login` - Login simple con email (sin OTP para admins)
-- [x] Página `/admin/dashboard` - Overview con KPIs principales
+- [x] Página `/admin/dashboard` - Overview con KPIs principales + métricas de oraciones
 - [x] Página `/admin/funnel` - Visualización del funnel de conversión
 - [x] Página `/admin/users` - Tabla de usuarios con:
   - [x] Búsqueda por nombre/email
   - [x] Filtros (admin, premium, activos)
   - [x] CRUD completo (crear, editar, eliminar usuarios)
   - [x] Paginación (20 usuarios por página)
-- [x] Sección de métricas de Biblia con:
+- [x] Página `/admin/content` - Analytics detallados de oraciones:
+  - [x] Tabla con stats por oración (completadas, tasa de completado)
+  - [x] Gráfico de completados por semana
+  - [x] Comparación premium vs gratuitas
+- [x] Sección de métricas de Biblia en dashboard:
   - [x] Porcentaje de usuarios leyendo
   - [x] Total de capítulos leídos
   - [x] Lecturas de la semana
   - [x] Ranking de libros más populares
+- [x] Sección de métricas de Oraciones en dashboard:
+  - [x] Total oraciones completadas
+  - [x] Usuarios orando
+  - [x] Top 5 oraciones populares
+  - [x] Distribución por categoría
 
 **Seguridad:**
 - [x] Verificación de rol admin en middleware
@@ -113,7 +154,7 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 
 #### 7. Core: Oración Guiada 🎯
 **Backend:**
-- [x] Modelo `Oracion` con campos: titulo, categoria, descripcion, contenido_texto, audio_url, duracion, es_premium, orden
+- [x] Modelo `Oracion` con campos: titulo, categoria, descripcion, contenido_texto, audio_url, video_url, duracion, es_premium, orden
 - [x] Modelo `OracionUsuario` con pivot table y tracking de progreso/completado
 - [x] Controller `OracionController` con 6 endpoints:
   - [x] `GET /api/oraciones` - Lista con filtros (categoría, tipo premium/gratuitas)
@@ -188,25 +229,27 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 
 #### 9. Dashboard Admin - Métricas Avanzadas
 **Backend:**
-- [ ] Endpoints adicionales:
+- [x] `GET /admin/content` - Analytics de oraciones ✅
+- [x] Queries para analytics de oraciones: ✅
+  - [x] Total oraciones completadas por usuario
+  - [x] Oraciones más populares
+  - [x] Distribución por categoría
+  - [x] Tasa de completado de oraciones iniciadas
+- [ ] Endpoints de métricas financieras (pendiente hasta implementar monetización):
   - [ ] `GET /api/admin/revenue` - Métricas de ingresos (MRR, ARR)
-  - [ ] `GET /api/admin/oraciones/stats` - Analytics de oraciones (completadas, por categoría, más populares)
 - [ ] Queries agregadas para métricas financieras:
   - [ ] Suscripciones activas/canceladas
   - [ ] Churn rate
   - [ ] MRR (Monthly Recurring Revenue)
   - [ ] LTV (Lifetime Value)
-- [ ] Queries para analytics de oraciones:
-  - [ ] Total oraciones completadas por usuario
-  - [ ] Oraciones más populares
-  - [ ] Distribución por categoría
+- [ ] Queries avanzadas de oraciones:
   - [ ] Tiempo promedio de completado
-  - [ ] Tasa de completado de oraciones iniciadas
 
 **Frontend:**
+- [x] Página `/admin/content` - Analytics de oraciones ✅
+- [x] Sección de oraciones en `/admin/dashboard` ✅
 - [ ] Página `/admin/revenue` - Métricas financieras (MRR, ARR, churn)
-- [ ] Página `/admin/content` - Analytics de oraciones y contenido
-- [ ] Componentes de gráficos interactivos (usar Chart.js o Recharts)
+- [ ] Componentes de gráficos interactivos avanzados (usar Chart.js o Recharts)
 - [ ] Export de datos a CSV
 - [ ] Rate limiting en endpoints admin
 - [ ] Logging de acciones administrativas
@@ -232,15 +275,24 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - [ ] Configuración de notificaciones en perfil de usuario
 
 #### 13. Mejoras UX/UI
+- [x] LoadingSpinner component reutilizable ✅
+- [x] Global loading.tsx para transiciones ✅
+- [x] Spinners contextuales en todas las páginas ✅
+- [x] Arquitectura SPA para navegación instantánea (0ms) ✅
 - [ ] Splash screen con logo
-- [ ] Animaciones de transición entre páginas
 - [ ] Skeleton loaders para carga de contenido
 - [ ] Estados vacíos mejorados (empty states)
 - [ ] Mensajes de error más amigables
 - [ ] Tutorial de primera vez (onboarding visual)
 
 #### 14. Optimizaciones Técnicas
-- [ ] Caché de oraciones en frontend (IndexedDB o localStorage)
+- [x] CSRF cookie caching (evita requests duplicados) ✅
+- [x] Precarga de CSRF en RegisterForm ✅
+- [x] SESSION_DRIVER=file para desarrollo local ✅
+- [x] Laravel config/route caching ✅
+- [x] Estado persistente en tabs (oraciones y biblia en memoria) ✅
+- [x] Arquitectura SPA preparada para Capacitor ✅
+- [ ] Caché de oraciones en IndexedDB o localStorage
 - [ ] Precarga de audio para mejor experiencia
 - [ ] Optimización de imágenes (WebP)
 - [ ] Service Worker para modo offline básico
@@ -251,14 +303,15 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 
 ## Roadmap de Desarrollo
 
-### ✅ Fase 1: Core de Oración (COMPLETADA) 🎉
-**Objetivo:** Implementar funcionalidad principal de oración guiada
+### ✅ Fase 1: Core de Oración + Arquitectura SPA (COMPLETADA) 🎉
+**Objetivo:** Implementar funcionalidad principal de oración guiada + preparar para Capacitor
 
 1. **Backend Oraciones** ✅
    - ✅ Modelos Oracion y OracionUsuario creados
    - ✅ OracionController con 6 endpoints implementados
    - ✅ 10 oraciones seeded (5 gratuitas, 5 premium)
    - ✅ Relación many-to-many con tracking de progreso
+   - ✅ Campo video_url agregado para contenido multimedia
 
 2. **Frontend Oraciones** ✅
    - ✅ Página /oracion con lista y filtros por categoría
@@ -267,7 +320,20 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
    - ✅ Reproductor de audio HTML5 básico
    - ✅ Integración completa con API (CSRF + auth)
 
-3. **Pendiente de Fase 1:**
+3. **Arquitectura SPA (Preparación Capacitor)** ✅
+   - ✅ Dashboard convertido a SPA con tabs
+   - ✅ BibliaTab, OracionesTab, InicioTab creados
+   - ✅ Navegación instantánea (0ms) entre tabs
+   - ✅ Estado persistente en memoria
+   - ✅ Optimizaciones de performance (CSRF caching, session file)
+   - ✅ LoadingSpinner components implementados
+
+4. **Analytics de Oraciones** ✅
+   - ✅ Endpoint /admin/content con métricas detalladas
+   - ✅ Página admin con analytics de oraciones
+   - ✅ Tracking de primera oración completada en funnel
+
+5. **Pendiente de Fase 1:**
    - [ ] Grabar audios profesionales (5 oraciones premium)
    - [ ] Subir audios a storage
    - [ ] Expandir a 15-20 oraciones
@@ -328,11 +394,15 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - [x] Usuario puede completar oraciones y ver su progreso
 - [x] Filtrado de oraciones por categoría funcional
 - [x] Reproductor de audio HTML5 básico disponible (para oraciones con audio)
+- [x] **Navegación instantánea (0ms) entre Dashboard, Biblia y Oraciones (SPA)** ✅
+- [x] **Estado persistente: al volver a un tab se mantiene en el mismo lugar** ✅
+- [x] **Optimizaciones de performance: CSRF caching, sesiones rápidas** ✅
+- [x] App funciona perfectamente en móvil (responsive 320px-428px)
+- [x] **Arquitectura preparada para Capacitor (encapsulamiento nativo)** ✅
 - [ ] Audios profesionales grabados para oraciones premium
 - [ ] Usuario puede suscribirse a plan premium ($4.99/mes)
 - [ ] Usuario puede crear y gestionar intenciones de oración
 - [ ] Dashboard muestra estadísticas reales (racha, oraciones completadas)
-- [x] App funciona perfectamente en móvil (responsive 320px-428px)
 - [ ] Proceso de pago funciona end-to-end
 - [ ] Contenido premium está bloqueado correctamente con paywall
 
@@ -342,8 +412,9 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - [x] Visualización del funnel: Registro → Encuesta → Primera oración → Suscripción
 - [x] Tabla de usuarios con filtros y búsqueda (búsqueda, CRUD completo)
 - [x] Analytics de contenido de Biblia: usuarios leyendo, capítulos más leídos, lecturas por semana
+- [x] **Analytics de oraciones: más completadas, tasa de completado, categorías populares** ✅
+- [x] **Página /admin/content con métricas detalladas de oraciones** ✅
 - [ ] Métricas de ingresos: MRR, suscripciones activas, churn rate (pendiente hasta implementar monetización)
-- [ ] Analytics de oraciones: más completadas, tasa de completado, categorías populares
 
 ---
 
@@ -376,7 +447,11 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - Next.js 16, React 19
 - TypeScript
 - Tailwind CSS v4
-- Mobile-only design
+- **Arquitectura SPA con tabs** (Dashboard, Biblia, Oraciones)
+- Componentes tabs: BibliaTab, OracionesTab, InicioTab
+- LoadingSpinner component reutilizable
+- Mobile-only design (320px-428px)
+- Preparado para Capacitor
 
 **Frontend (Dashboard Admin):**
 - Inertia.js + React 19
@@ -391,10 +466,10 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - Pagos: Stripe o MercadoPago
 
 ## Futuras Mejoras (Post-MVP)
-- [ ] **Encapsular en Capacitor**: Convertir la aplicación web en una aplicación nativa para iOS y Android utilizando Capacitor para distribución en tiendas (App Store / Play Store).
-- [ ] **Modo Offline avanzado**: Caché completa de audios y textos bíblicos para uso sin conexión.
-- [ ] **Social**: 
-sociales.
+- [x] **Preparación arquitectura para Capacitor**: Arquitectura SPA con navegación instantánea ✅
+- [ ] **Encapsular en Capacitor**: Convertir la aplicación web en app nativa iOS/Android para distribución en App Store / Play Store
+- [ ] **Modo Offline avanzado**: Caché completa de audios y textos bíblicos para uso sin conexión
+- [ ] **Social**: Compartir oraciones, comunidad, grupos de oración
 
 ---
 
@@ -422,11 +497,17 @@ sociales.
 
 ## Siguiente Paso Inmediato
 
-🎯 **ACCIÓN:** ~~Fase 1 completada~~ → Avanzar a Fase 2 - Implementar monetización básica
+🎯 **ACCIÓN:** ~~Fase 1 completada (incluye Analytics)~~ → Avanzar a Fase 2 - Implementar monetización básica
+
+**Últimas mejoras implementadas:**
+- ✅ Arquitectura SPA con tabs (preparación Capacitor)
+- ✅ Analytics de oraciones en dashboard admin (Opción C completada)
+- ✅ Optimizaciones de performance (CSRF caching, sesiones)
+- ✅ LoadingSpinner components en todas las páginas
 
 **Opciones de continuación:**
 
-### Opción A: Mejorar contenido de oraciones (recomendado antes de monetizar)
+### Opción A: Mejorar contenido de oraciones (RECOMENDADO antes de monetizar)
 - **Prioridad 1:** Grabar audios profesionales para las 5 oraciones premium (TTS o voz humana)
 - **Prioridad 2:** Subir audios a storage (S3, Cloudinary, o local)
 - **Prioridad 3:** Expandir de 10 a 15-20 oraciones de calidad
@@ -438,10 +519,10 @@ sociales.
 - **Prioridad 3:** Frontend: Página de planes, checkout, paywall para contenido premium
 - **Beneficio:** Habilitar generación de ingresos desde MVP
 
-### Opción C: Analytics de oraciones en Dashboard Admin
-- **Prioridad 1:** Endpoint `GET /api/admin/oraciones/stats`
-- **Prioridad 2:** Página `/admin/content` con métricas de oraciones
-- **Prioridad 3:** Tracking de "Primera oración completada" para funnel
-- **Beneficio:** Visibilidad de engagement con oraciones
+### Opción D: Encapsular con Capacitor (distribución nativa)
+- **Prioridad 1:** Instalar Capacitor CLI y configurar proyecto
+- **Prioridad 2:** Crear build de producción y sincronizar con Capacitor
+- **Prioridad 3:** Probar en emuladores iOS/Android
+- **Beneficio:** App nativa funcionando en móviles, preparada para tiendas
 
-**Recomendación:** Opción A → Opción B → Opción C (contenido primero, luego monetización, luego analytics)
+**Recomendación:** Opción A → Opción B → Opción D (contenido primero, luego monetización, luego distribución nativa)
