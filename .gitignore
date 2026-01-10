@@ -11,7 +11,7 @@ Desktop.ini
 *.swo
 *.sublime-project
 *.sublime-workspace
-
+/home/rrichard/ora/CLAUDE.md
 # --- General Logs ---
 *.log
 npm-debug.log*
