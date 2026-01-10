@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth as authCheck, apiRequest, getCsrfCookie } from '@/lib/auth';
 import PremiumBanner from '@/components/PremiumBanner';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 interface Oracion {
   id: number;
@@ -106,11 +107,7 @@ export default function OracionesPage() {
   };
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <p className="text-gray-600">Cargando...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando oraciones..." />;
   }
 
   return (

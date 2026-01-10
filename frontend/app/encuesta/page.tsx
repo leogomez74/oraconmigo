@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth, logout as authLogout, apiRequest } from '@/lib/auth';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 interface Encuesta {
   id: number;
@@ -371,11 +372,7 @@ export default function EncuestaPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <p className="text-gray-600">Cargando...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando encuesta..." />;
   }
 
   return (

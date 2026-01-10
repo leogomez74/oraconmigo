@@ -79,25 +79,15 @@ class AuthController extends Controller
             ->first();
 
         if (!$person) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email no encontrado o no tienes permisos de administrador',
-            ], 403);
+            throw ValidationException::withMessages([
+                'email' => ['No se encontró un administrador con este correo electrónico.'],
+            ]);
         }
 
         // Autenticar directamente
         Auth::login($person);
         $request->session()->regenerate();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Login exitoso',
-            'user' => [
-                'id' => $person->id,
-                'nombre' => $person->nombre,
-                'email' => $person->email,
-                'is_admin' => $person->is_admin,
-            ]
-        ]);
+        return redirect()->intended('/admin/dashboard');
     }
 }

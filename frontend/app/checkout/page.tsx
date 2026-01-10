@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { checkAuth as authCheck } from '@/lib/auth';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -80,11 +81,7 @@ export default function CheckoutPage() {
   };
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <p className="text-gray-600">Cargando...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Preparando checkout..." />;
   }
 
   return (

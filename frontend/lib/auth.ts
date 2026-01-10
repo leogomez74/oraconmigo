@@ -6,11 +6,16 @@
 // This avoids CORS issues
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
+// Cache CSRF cookie to avoid duplicate requests
+let csrfCookieCached = false;
+
 /**
  * Get CSRF cookie before making authenticated requests
  * This is required for Sanctum SPA authentication
  */
 export async function getCsrfCookie(): Promise<void> {
+  if (csrfCookieCached) return; // Skip if already obtained
+
   await fetch(`${API_URL}/sanctum/csrf-cookie`, {
     method: 'GET',
     credentials: 'include',
@@ -18,6 +23,15 @@ export async function getCsrfCookie(): Promise<void> {
       'Accept': 'application/json',
     },
   });
+
+  csrfCookieCached = true;
+}
+
+/**
+ * Reset CSRF cache (called on logout)
+ */
+export function resetCsrfCache() {
+  csrfCookieCached = false;
 }
 
 /**
@@ -256,6 +270,8 @@ export async function logout() {
         ...responseData,
       };
     }
+
+    resetCsrfCache();
 
     return responseData;
   } catch (error: any) {

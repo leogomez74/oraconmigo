@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CountrySelect from '@/components/CountrySelect';
-import { register } from '@/lib/auth';
+import { register, getCsrfCookie } from '@/lib/auth';
 import { countries } from '@/lib/countries';
 
 export default function RegisterForm() {
@@ -19,6 +19,11 @@ export default function RegisterForm() {
   const [generalError, setGeneralError] = useState<string>('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Preload CSRF cookie when component mounts
+  useEffect(() => {
+    getCsrfCookie().catch(err => console.error('Error precargando CSRF:', err));
+  }, []);
 
   // Auto-set prefix when country is selected
   useEffect(() => {

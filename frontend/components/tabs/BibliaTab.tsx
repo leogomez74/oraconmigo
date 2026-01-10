@@ -1,11 +1,8 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { checkAuth as authCheck, apiRequest, getCsrfCookie } from '@/lib/auth';
+import { apiRequest, getCsrfCookie } from '@/lib/auth';
 import PremiumBanner from '@/components/PremiumBanner';
-import LoadingSpinner from '@/components/LoadingSpinner';
 
 interface Book {
   names: string[];
@@ -21,36 +18,21 @@ interface Verse {
   id: number;
 }
 
-export default function BiblePage() {
-  const router = useRouter();
+interface BibliaTabProps {
+  onBack: () => void;
+}
+
+export default function BibliaTab({ onBack }: BibliaTabProps) {
   const [view, setView] = useState<'books' | 'chapters' | 'verses'>('books');
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(1);
   const [chapterContent, setChapterContent] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
+    fetchBooks();
   }, []);
-
-  const checkAuth = async () => {
-    try {
-      const userData = await authCheck();
-
-      if (!userData) {
-        router.push('/');
-        return;
-      }
-
-      setAuthLoading(false);
-      fetchBooks();
-    } catch (error) {
-      console.error('Error:', error);
-      router.push('/');
-    }
-  };
 
   const fetchBooks = async () => {
     setLoading(true);
@@ -132,7 +114,7 @@ export default function BiblePage() {
       setView('books');
       setSelectedBook(null);
     } else {
-      router.push('/dashboard');
+      onBack();
     }
   };
 
@@ -174,12 +156,8 @@ export default function BiblePage() {
     }
   };
 
-  if (authLoading) {
-    return <LoadingSpinner message="Cargando Biblia..." />;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -275,7 +253,7 @@ export default function BiblePage() {
                 </svg>
                 Anterior
               </button>
-              
+
               <button
                 onClick={handleNextChapter}
                 className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
@@ -290,6 +268,6 @@ export default function BiblePage() {
           </>
         )}
       </div>
-    </div>
+    </>
   );
 }
