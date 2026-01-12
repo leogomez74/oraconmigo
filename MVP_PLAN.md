@@ -1,4 +1,5 @@
 # Plan MVP - Oras App
+prueba cambio
 
 **Última actualización**: 2026-01-10
 
