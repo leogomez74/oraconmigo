@@ -98,14 +98,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div style={{"height": "70vh"}} className=" bg-gray-900 p-5 sm:p-4 md:p-6 rounded-2xl overflow-y-auto">
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      <div style={{"height": "70vh"}} className="bg-gray-900 p-5 sm:p-4 md:p-6 rounded-2xl w-full max-w-xl overflow-y-auto">
         <h1 className="text-xl max-h-[600px]:text-lg sm:text-2xl md:text-3xl font-bold text-white mb-5 max-h-[600px]:mb-3 sm:mb-5">
           Registro
         </h1>
 
         <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6 p-2 max-h-[600px]:p-2 sm:p-3 md:p-4 bg-gray-800 border border-gray-700 rounded-xl">
-          <p style={{"padding":"1vh"}} className="text-xs sm:text-sm text-gray-300 leading-relaxed break-words">
+          <p className="text-xs sm:text-sm text-gray-300 leading-relaxed break-words">
             <strong>Nota:</strong> Próximamente implementaremos autenticación con código OTP por email (sin contraseña).
           </p>
         </div>
@@ -162,7 +162,7 @@ export default function RegisterPage() {
             )}
           </div>
 
-          <div className="mb-6 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
+          <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
             <label className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
               País
             </label>
@@ -204,8 +204,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            style={{"margin":"2.7vh 0"}}
-            className="mb-6 w-full bg-yellow-500 text-black py-2.5 max-h-[600px]:py-2 sm:py-3 md:py-4 px-4 sm:px-4 md:px-6 text-sm sm:text-base md:text-lg font-bold rounded-xl hover:bg-yellow-400 active:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="w-full bg-yellow-500 text-black py-2.5 max-h-[600px]:py-2 sm:py-3 md:py-4 px-4 sm:px-4 md:px-6 text-sm sm:text-base md:text-lg font-bold rounded-xl hover:bg-yellow-400 active:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             {loading ? 'Registrando...' : 'Registrar'}
           </button>
@@ -214,3 +213,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

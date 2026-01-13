@@ -192,9 +192,9 @@ const questions: Question[] = [
   },
 ];
 
-// Define progress steps (10 steps with 2 questions each = 20 questions total)
-const QUESTIONS_PER_STEP = 2;
-const TOTAL_STEPS = 10;
+// Define progress steps (20 steps with 1 question each = 20 questions total)
+const QUESTIONS_PER_STEP = 1;
+const TOTAL_STEPS = 20;
 
 export default function EncuestaPage() {
   const router = useRouter();
