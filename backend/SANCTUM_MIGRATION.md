@@ -2,11 +2,11 @@
 
 ## ✅ Migración Completada
 
-La aplicación ORAS ha sido migrada exitosamente de **API Tokens con localStorage** a **Sanctum SPA Authentication con cookies httpOnly**.
+La aplicación ORA ha sido migrada exitosamente de **API Tokens con localStorage** a **Sanctum SPA Authentication con cookies httpOnly**.
 
 ---
 
-## 🔒 Mejoras de Seguridad
+## 🔒 MejORA de Seguridad
 
 ### Antes (Inseguro ❌)
 ```typescript

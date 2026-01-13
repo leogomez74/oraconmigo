@@ -39,7 +39,7 @@ export const countries = [
   { code: 'CN', name: 'China', prefix: '+86' },
   { code: 'CY', name: 'Chipre', prefix: '+357' },
   { code: 'CO', name: 'Colombia', prefix: '+57' },
-  { code: 'KM', name: 'Comoras', prefix: '+269' },
+  { code: 'KM', name: 'ComORA', prefix: '+269' },
   { code: 'CG', name: 'Congo', prefix: '+242' },
   { code: 'KP', name: 'Corea del Norte', prefix: '+850' },
   { code: 'KR', name: 'Corea del Sur', prefix: '+82' },

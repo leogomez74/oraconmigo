@@ -15,7 +15,7 @@ class AdminUserSeeder extends Seeder
     {
         // Crear usuario admin si no existe
         People::firstOrCreate(
-            ['email' => 'admin@oras.app'],
+            ['email' => 'admin@ORA.app'],
             [
                 'nombre' => 'Administrador',
                 'pais' => 'Argentina',
@@ -24,6 +24,6 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $this->command->info('Usuario administrador creado: admin@oras.app');
+        $this->command->info('Usuario administrador creado: admin@ORA.app');
     }
 }

@@ -20,24 +20,24 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "ORAS - Servicio de Oración con IA",
-    template: "%s | ORAS",
+    default: "ORA - Servicio de Oración con IA",
+    template: "%s | ORA",
   },
   description: "Tu espacio personalizado de oración y reflexión espiritual impulsado por inteligencia artificial",
   keywords: ["oración", "inteligencia artificial", "reflexión", "espiritualidad", "fe", "oración personalizada"],
-  authors: [{ name: "ORAS" }],
-  creator: "ORAS",
-  publisher: "ORAS",
+  authors: [{ name: "ORA" }],
+  creator: "ORA",
+  publisher: "ORA",
   openGraph: {
     type: "website",
     locale: "es_ES",
-    siteName: "ORAS",
-    title: "ORAS - Servicio de Oración con IA",
+    siteName: "ORA",
+    title: "ORA - Servicio de Oración con IA",
     description: "Tu espacio personalizado de oración y reflexión espiritual impulsado por inteligencia artificial",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ORAS - Servicio de Oración con IA",
+    title: "ORA - Servicio de Oración con IA",
     description: "Tu espacio personalizado de oración y reflexión espiritual",
   },
 };

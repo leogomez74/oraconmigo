@@ -1,8 +1,8 @@
-# Registro de Cambios - Proyecto ORAS
+# Registro de Cambios - Proyecto ORA
 
 ## Resumen del Proyecto
 
-**ORAS** es una aplicación web móvil-primero para un servicio de oración con inteligencia artificial. La aplicación permite a los usuarios registrarse y completar una encuesta sobre sus necesidades y preferencias espirituales.
+**ORA** es una aplicación web móvil-primero para un servicio de oración con inteligencia artificial. La aplicación permite a los usuarios registrarse y completar una encuesta sobre sus necesidades y preferencias espirituales.
 
 **Stack Tecnológico:**
 - Backend: Laravel 12 + PHP 8.4
@@ -169,7 +169,7 @@ Archivo: app/Http/Controllers/RespuestaController.php
 
 ---
 
-### 5. Mejoras de Diseño y UX
+### 5. MejORA de Diseño y UX
 
 #### Dropdowns Personalizados
 **Cambio:** Reemplazo de `<select>` nativo por componentes custom
@@ -249,7 +249,7 @@ Archivo: app/Http/Controllers/RespuestaController.php
 - Dropdown arrows: `w-4 h-4 sm:w-5 sm:h-5`
 - Checkboxes/radios: `w-4 h-4 sm:w-5 sm:h-5`
 
-#### Mejoras Específicas
+#### MejORA Específicas
 
 **Contenedor de Notas:**
 - Agregado `break-words` para prevenir overflow
@@ -467,7 +467,7 @@ POST /api/respuestas       - Guardar respuestas
 ### Variables de Entorno Backend (.env)
 
 ```env
-APP_NAME=ORAS
+APP_NAME=ORA
 APP_ENV=local
 APP_URL=http://localhost:8000
 
@@ -519,7 +519,7 @@ npm run build         # Build de producción
 - Modelo OtpCode ya creado
 - **Pendiente:** Implementación de lógica de envío y verificación
 
-### Mejoras Futuras Potenciales
+### MejORA Futuras Potenciales
 - Dashboard de usuario
 - Historial de respuestas
 - Notificaciones push

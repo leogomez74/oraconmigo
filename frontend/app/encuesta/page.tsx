@@ -29,9 +29,9 @@ interface Question {
 }
 
 // Questions configuration - Grouped by progress steps
-// Basado en el onboarding de Pray.com
+// Basado en el onboarding completo de Pray.com + preguntas adicionales (10 pasos, 20 preguntas)
 const questions: Question[] = [
-  // Step 1 (25% progress) - Compromiso y Personalización Inicial
+  // Step 1 (10% progress) - Compromiso Inicial
   {
     id: 'tiempo_diario',
     pregunta: '¿Cuánto tiempo quieres dedicarle a tu vida de oración cada día?',
@@ -40,14 +40,78 @@ const questions: Question[] = [
     requerida: true,
   },
   {
+    id: 'momento_preferido',
+    pregunta: '¿En qué momento del día prefieres orar?',
+    tipo: 'radio',
+    opciones: ['Por la mañana al despertar', 'Durante el día (mediodía)', 'Por la tarde', 'Por la noche antes de dormir', 'Cualquier momento'],
+    requerida: true,
+  },
+
+  // Step 2 (20% progress) - Necesidades Emocionales
+  {
     id: 'area_mejorar',
-    pregunta: '¿Qué área te gustaría mejorar primero?',
+    pregunta: '¿Qué área te gustaría mejorar primero? (Selecciona todas las que apliquen)',
     tipo: 'multiple_choice',
     opciones: ['Reducir el estrés', 'Disminuir la ansiedad', 'Mejorar el ánimo', 'Dormir mejor', 'Crecer espiritualmente', 'Encontrar sentido y propósito'],
     requerida: true,
   },
+  {
+    id: 'nivel_estres',
+    pregunta: '¿Cómo describirías tu nivel de estrés actualmente?',
+    tipo: 'radio',
+    opciones: ['Muy alto', 'Alto', 'Moderado', 'Bajo', 'Muy bajo'],
+    requerida: true,
+  },
 
-  // Step 2 (50% progress) - Apoyo y Perfil Demográfico
+  // Step 3 (30% progress) - Experiencia Espiritual
+  {
+    id: 'experiencia_oracion',
+    pregunta: '¿Cuál es tu experiencia con la oración?',
+    tipo: 'radio',
+    opciones: ['Soy nuevo en esto', 'He orado algunas veces', 'Oro ocasionalmente', 'Oro regularmente', 'Oro diariamente'],
+    requerida: true,
+  },
+  {
+    id: 'temas_oracion',
+    pregunta: '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
+    tipo: 'multiple_choice',
+    opciones: ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Paz interior', 'Guía y dirección', 'Gratitud', 'Perdón', 'Fortaleza'],
+    requerida: true,
+  },
+
+  // Step 4 (40% progress) - Contexto Religioso
+  {
+    id: 'denominacion',
+    pregunta: '¿Con qué denominación cristiana te identificas?',
+    tipo: 'radio',
+    opciones: ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra', 'Prefiero no decir'],
+    requerida: false,
+  },
+  {
+    id: 'asistencia_iglesia',
+    pregunta: '¿Con qué frecuencia asistes a una iglesia o comunidad de fe?',
+    tipo: 'radio',
+    opciones: ['Varias veces por semana', 'Una vez por semana', 'Una o dos veces al mes', 'Ocasionalmente', 'Casi nunca', 'Nunca'],
+    requerida: false,
+  },
+
+  // Step 5 (50% progress) - Conocimiento Bíblico
+  {
+    id: 'lectura_biblia',
+    pregunta: '¿Con qué frecuencia lees la Biblia?',
+    tipo: 'radio',
+    opciones: ['Diariamente', 'Varias veces por semana', 'Una vez por semana', 'Ocasionalmente', 'Casi nunca', 'Nunca'],
+    requerida: false,
+  },
+  {
+    id: 'conocimiento_biblico',
+    pregunta: '¿Cómo describirías tu conocimiento de la Biblia?',
+    tipo: 'radio',
+    opciones: ['Principiante (recién empiezo)', 'Básico (conozco algunas historias)', 'Intermedio (he leído varias partes)', 'Avanzado (la he leído completa)', 'Experto (la estudio profundamente)'],
+    requerida: false,
+  },
+
+  // Step 6 (60% progress) - Sistema de Apoyo
   {
     id: 'sistema_apoyo',
     pregunta: '¿Cuántas personas pueden apoyarte en momentos difíciles?',
@@ -56,14 +120,30 @@ const questions: Question[] = [
     requerida: true,
   },
   {
+    id: 'estado_civil',
+    pregunta: '¿Cuál es tu estado civil?',
+    tipo: 'radio',
+    opciones: ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Prefiero no decir'],
+    requerida: false,
+  },
+
+  // Step 7 (70% progress) - Perfil Familiar
+  {
+    id: 'tiene_hijos',
+    pregunta: '¿Tienes hijos?',
+    tipo: 'radio',
+    opciones: ['Sí, menores de edad', 'Sí, mayores de edad', 'Sí, de ambas edades', 'No tengo hijos', 'Prefiero no decir'],
+    requerida: false,
+  },
+  {
     id: 'genero',
-    pregunta: '¿Cuál es tu género?',
+    pregunta: '¿Cuál es tu género? (Esto nos ayuda a personalizar el contenido)',
     tipo: 'radio',
     opciones: ['Hombre', 'Mujer', 'Prefiero no decir'],
     requerida: false,
   },
 
-  // Step 3 (75% progress) - Edad y Recordatorios
+  // Step 8 (80% progress) - Perfil Demográfico
   {
     id: 'grupo_edad',
     pregunta: '¿Cuál es tu grupo de edad?',
@@ -72,33 +152,49 @@ const questions: Question[] = [
     requerida: false,
   },
   {
+    id: 'formato_preferido',
+    pregunta: '¿Qué formato de contenido prefieres?',
+    tipo: 'multiple_choice',
+    opciones: ['Audio guiado', 'Texto para leer', 'Video', 'Música de fondo', 'Imágenes inspiradoras', 'Cualquiera'],
+    requerida: true,
+  },
+
+  // Step 9 (90% progress) - Hábitos y Recordatorios
+  {
     id: 'recordatorios',
     pregunta: '¿Te gustaría recibir recordatorios diarios para orar?',
     tipo: 'radio',
     opciones: ['Sí, activar ahora', 'Tal vez después', 'No, gracias'],
     requerida: true,
   },
+  {
+    id: 'frecuencia_recordatorios',
+    pregunta: 'Si activas recordatorios, ¿cuántos por día prefieres?',
+    tipo: 'radio',
+    opciones: ['1 vez al día', '2 veces al día', '3 veces al día', 'Solo cuando yo decida'],
+    requerida: false,
+  },
 
-  // Step 4 (100% progress) - Funcionalidades y Premium
+  // Step 10 (100% progress) - Funcionalidades y Premium
   {
     id: 'funcionalidades_deseadas',
-    pregunta: '¿Qué funcionalidades te gustaría que incluyera nuestro servicio?',
+    pregunta: '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)',
     tipo: 'multiple_choice',
-    opciones: ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración'],
+    opciones: ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración', 'Rastreo de progreso', 'Versículos diarios'],
     requerida: false,
   },
   {
     id: 'experiencia_premium',
-    pregunta: '¿Te interesaría una experiencia sin anuncios?',
+    pregunta: '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?',
     tipo: 'radio',
     opciones: ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
     requerida: true,
   },
 ];
 
-// Define progress steps (4 steps with 2 questions each)
+// Define progress steps (10 steps with 2 questions each = 20 questions total)
 const QUESTIONS_PER_STEP = 2;
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 10;
 
 export default function EncuestaPage() {
   const router = useRouter();
@@ -450,7 +546,7 @@ export default function EncuestaPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <span className="text-white font-semibold tracking-wider text-xs max-h-[600px]:text-xs sm:text-sm md:text-base">ORAS</span>
+          <span className="text-white font-semibold tracking-wider text-xs max-h-[600px]:text-xs sm:text-sm md:text-base">ORA</span>
         </div>
         <div className="flex items-center gap-3">
           {/* ✅ Indicador de auto-save */}

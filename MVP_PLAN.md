@@ -1,4 +1,4 @@
-# Plan MVP - Oras App
+# Plan MVP - ORA App
 prueba cambio
 
 **Última actualización**: 2026-01-10
@@ -21,7 +21,7 @@ prueba cambio
 - ✅ SESSION_DRIVER=file para desarrollo local (mejora velocidad)
 - ✅ Laravel config/route caching optimizado
 
-**Mejoras de UX:**
+**MejORA de UX:**
 - ✅ LoadingSpinner component reutilizable con mensajes contextuales
 - ✅ Global loading.tsx para transiciones de Next.js
 - ✅ Spinners implementados en 6 páginas (dashboard, biblia, oracion, encuesta, checkout, planes)
@@ -275,7 +275,7 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - [ ] Notificaciones push (usando OneSignal o similar)
 - [ ] Configuración de notificaciones en perfil de usuario
 
-#### 13. Mejoras UX/UI
+#### 13. MejORA UX/UI
 - [x] LoadingSpinner component reutilizable ✅
 - [x] Global loading.tsx para transiciones ✅
 - [x] Spinners contextuales en todas las páginas ✅
@@ -466,7 +466,7 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 - Audio storage: TBD (S3, Cloudinary, local)
 - Pagos: Stripe o MercadoPago
 
-## Futuras Mejoras (Post-MVP)
+## Futuras MejORA (Post-MVP)
 - [x] **Preparación arquitectura para Capacitor**: Arquitectura SPA con navegación instantánea ✅
 - [ ] **Encapsular en Capacitor**: Convertir la aplicación web en app nativa iOS/Android para distribución en App Store / Play Store
 - [ ] **Modo Offline avanzado**: Caché completa de audios y textos bíblicos para uso sin conexión
@@ -500,7 +500,7 @@ Aplicación móvil de oración guiada con acceso gratuito a la Biblia RVR1960 y 
 
 🎯 **ACCIÓN:** ~~Fase 1 completada (incluye Analytics)~~ → Avanzar a Fase 2 - Implementar monetización básica
 
-**Últimas mejoras implementadas:**
+**Últimas mejORA implementadas:**
 - ✅ Arquitectura SPA con tabs (preparación Capacitor)
 - ✅ Analytics de oraciones en dashboard admin (Opción C completada)
 - ✅ Optimizaciones de performance (CSRF caching, sesiones)
