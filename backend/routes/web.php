@@ -46,4 +46,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/users/{id}', [AdminController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('users.destroy');
     Route::get('/content', [AdminController::class, 'content'])->name('content');
+    Route::get('/encuesta-analytics', [AdminController::class, 'encuestaAnalytics'])->name('encuesta.analytics');
 });

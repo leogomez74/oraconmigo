@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BibleReading;
+use App\Models\EncuestaProgreso;
 use App\Models\Oracion;
 use App\Models\OracionUsuario;
 use App\Models\People;
@@ -338,5 +339,104 @@ class AdminController extends Controller
                 'oracionesGratuitasCompletadas' => $oracionesGratuitasCompletadas,
             ],
         ]);
+    }
+
+    /**
+     * Analytics detallados de abandono de encuesta
+     * Muestra drop-off por paso, preguntas problemáticas, y métricas de engagement
+     *
+     * @return \Inertia\Response
+     */
+    public function encuestaAnalytics()
+    {
+        // 1. Usuarios por estado
+        $porEstado = EncuestaProgreso::select('estado', DB::raw('count(*) as total'))
+            ->groupBy('estado')
+            ->get()
+            ->pluck('total', 'estado');
+
+        $totalRegistrados = People::count();
+        $sinIniciar = $totalRegistrados - EncuestaProgreso::count();
+
+        // 2. Drop-off por paso (usuarios en cada paso que NO avanzaron)
+        $dropoffPorPaso = [];
+        for ($paso = 1; $paso <= 4; $paso++) {
+            $enPaso = EncuestaProgreso::where('paso_actual', $paso)
+                ->where('completada', false)
+                ->count();
+
+            $dropoffPorPaso[] = [
+                'paso' => $paso,
+                'abandonos' => $enPaso,
+            ];
+        }
+
+        // 3. Preguntas con mayor abandono (última pregunta vista en abandonos)
+        $preguntasProblematicas = EncuestaProgreso::select('ultima_pregunta_vista', DB::raw('count(*) as abandonos'))
+            ->where('completada', false)
+            ->whereNotNull('ultima_pregunta_vista')
+            ->groupBy('ultima_pregunta_vista')
+            ->orderBy('abandonos', 'desc')
+            ->limit(5)
+            ->get();
+
+        // 4. High intent vs low intent
+        $conInteraccion = EncuestaProgreso::whereNotNull('respuestas_parciales')
+            ->whereRaw('JSON_LENGTH(respuestas_parciales) > 0')
+            ->where('completada', false)
+            ->count();
+
+        $sinInteraccion = $totalRegistrados - EncuestaProgreso::whereRaw('JSON_LENGTH(respuestas_parciales) > 0')->count();
+
+        // 5. Usuarios completados
+        $completadas = EncuestaProgreso::where('completada', true)->count();
+
+        return Inertia::render('Admin/EncuestaAnalytics', [
+            'metrics' => [
+                'totalRegistrados' => $totalRegistrados,
+                'sinIniciar' => $sinIniciar,
+                'enProgreso' => $porEstado['en_progreso'] ?? 0,
+                'completadas' => $completadas,
+                'tasaCompletado' => $totalRegistrados > 0 ? round(($completadas / $totalRegistrados) * 100, 2) : 0,
+            ],
+            'engagement' => [
+                'conInteraccion' => $conInteraccion,
+                'sinInteraccion' => $sinInteraccion,
+            ],
+            'dropoffPorPaso' => $dropoffPorPaso,
+            'preguntasProblematicas' => $preguntasProblematicas,
+        ]);
+    }
+
+    /**
+     * Calcula métricas básicas de abandono de encuesta
+     * Usado en el funnel principal
+     *
+     * @return array
+     */
+    public function getEncuestaDropoffMetrics()
+    {
+        $totalRegistrados = People::count();
+        $iniciaron = EncuestaProgreso::count();
+        $completaron = EncuestaProgreso::where('completada', true)->count();
+
+        // Drop-off por paso
+        $abandonosPorPaso = [];
+        for ($paso = 1; $paso <= 4; $paso++) {
+            $abandonos = EncuestaProgreso::where('paso_actual', $paso)
+                ->where('completada', false)
+                ->count();
+
+            $abandonosPorPaso[$paso] = $abandonos;
+        }
+
+        return [
+            'totalRegistrados' => $totalRegistrados,
+            'iniciaron' => $iniciaron,
+            'completaron' => $completaron,
+            'abandonosPorPaso' => $abandonosPorPaso,
+            'tasaInicio' => $totalRegistrados > 0 ? round(($iniciaron / $totalRegistrados) * 100, 2) : 0,
+            'tasaCompletado' => $iniciaron > 0 ? round(($completaron / $iniciaron) * 100, 2) : 0,
+        ];
     }
 }

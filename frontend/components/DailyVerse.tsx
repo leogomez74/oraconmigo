@@ -59,15 +59,15 @@ export default function DailyVerse() {
   if (loading) {
     return (
       <div className="animate-pulse space-y-3">
-        <div className="h-4 bg-indigo-100 rounded w-3/4"></div>
-        <div className="h-4 bg-indigo-100 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-700 rounded w-1/2"></div>
       </div>
     );
   }
 
   if (error || !verseData) {
     return (
-      <div className="text-red-500 text-sm">
+      <div className="text-red-400 text-sm">
         No se pudo cargar la palabra del día.
       </div>
     );
@@ -75,12 +75,12 @@ export default function DailyVerse() {
 
   return (
     <div className="space-y-2">
-      <blockquote className="text-gray-700 italic text-lg leading-relaxed border-l-4 border-indigo-500 pl-4">
+      <blockquote className="text-gray-300 italic text-lg leading-relaxed border-l-4 border-yellow-500 pl-4">
         &ldquo;{verseData.text}&rdquo;
       </blockquote>
-      <div className="flex justify-end items-center gap-2 text-sm text-gray-500 font-medium">
+      <div className="flex justify-end items-center gap-2 text-sm text-gray-400 font-medium">
         <span>{verseData.ref}</span>
-        <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">
+        <span className="text-xs bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded-full">
           RVR1960
         </span>
       </div>

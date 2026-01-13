@@ -51,22 +51,22 @@ export default function PremiumBanner({
     return (
       <button
         onClick={handleClick}
-        className={`w-full bg-gradient-to-r from-indigo-900 to-indigo-800 rounded-xl shadow-md p-5 text-left group relative overflow-hidden ${className}`}
+        className={`w-full bg-gradient-to-r from-yellow-600 to-yellow-500 rounded-xl shadow-md p-5 text-left group relative overflow-hidden ${className}`}
       >
-        <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
-        
+        <div className="absolute top-0 right-0 w-24 h-24 bg-black/10 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+
         <div className="flex items-center justify-between relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2 py-0.5 bg-yellow-400 text-yellow-900 text-xs font-bold rounded uppercase tracking-wider">
+              <span className="px-2 py-0.5 bg-black text-yellow-500 text-xs font-bold rounded uppercase tracking-wider">
                 Premium
               </span>
             </div>
-            <h3 className="font-bold text-white text-lg mb-1">Desbloquear todo el catálogo</h3>
-            <p className="text-indigo-100 text-sm">Accede a +100 oraciones guiadas</p>
+            <h3 className="font-bold text-black text-lg mb-1">Desbloquear todo el catálogo</h3>
+            <p className="text-black/80 text-sm">Accede a +100 oraciones guiadas</p>
           </div>
-          <div className="bg-white/20 p-2 rounded-full">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-black/20 p-2 rounded-full">
+            <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>

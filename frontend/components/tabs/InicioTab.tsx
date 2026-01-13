@@ -27,50 +27,50 @@ export default function InicioTab({
     <div className="max-w-4xl mx-auto px-3 py-4 sm:px-4 sm:py-6 md:py-8">
       {/* Greeting */}
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">
           {currentTime}, {user?.nombre}
         </h1>
-        <p className="text-sm sm:text-base text-gray-500">
+        <p className="text-sm sm:text-base text-gray-400">
           Tu espacio de oración personalizado
         </p>
       </div>
 
       {/* Daily Prayer Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
+      <div className="bg-gray-900 rounded-2xl border border-gray-800 p-4 sm:p-6 mb-4 sm:mb-6">
         <div className="flex items-center gap-2 mb-3 sm:mb-4">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-500/20 flex items-center justify-center">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           </div>
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">Palabra del día</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-white">Palabra del día</h2>
         </div>
 
-        <div className="bg-indigo-50 rounded-xl p-4 sm:p-5">
+        <div className="bg-gray-800 rounded-xl p-4 sm:p-5">
            <DailyVerse />
         </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-2">
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h3 className="text-xs sm:text-sm font-medium text-gray-500">Racha actual</h3>
+            <h3 className="text-xs sm:text-sm font-medium text-gray-400">Racha actual</h3>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-gray-900">1 día</p>
+          <p className="text-2xl sm:text-3xl font-bold text-white">1 día</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-2">
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
             </svg>
-            <h3 className="text-xs sm:text-sm font-medium text-gray-500">Oraciones</h3>
+            <h3 className="text-xs sm:text-sm font-medium text-gray-400">Oraciones</h3>
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-gray-900">1</p>
+          <p className="text-2xl sm:text-3xl font-bold text-white">1</p>
         </div>
       </div>
 
@@ -79,21 +79,21 @@ export default function InicioTab({
 
       {/* Quick Actions */}
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="text-base sm:text-lg font-bold text-gray-900">Acciones rápidas</h3>
+        <h3 className="text-base sm:text-lg font-bold text-white">Acciones rápidas</h3>
 
         <button
           onClick={onNavigateToOracion}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 text-white rounded-xl p-4 sm:p-5 flex items-center justify-between transition-colors group"
+          className="w-full bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-600 text-black rounded-xl p-4 sm:p-5 flex items-center justify-between transition-colors group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 flex items-center justify-center">
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div className="text-left">
-              <p className="font-semibold text-sm sm:text-base">Oraciones Guiadas</p>
-              <p className="text-xs sm:text-sm text-white/80">Encuentra  paz  y  fortaleza</p>
+              <p className="font-bold text-sm sm:text-base">Oraciones Guiadas</p>
+              <p className="text-xs sm:text-sm text-black/80">Encuentra  paz  y  fortaleza</p>
             </div>
           </div>
           <svg className="w-5 h-5 sm:w-6 sm:h-6 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,20 +103,20 @@ export default function InicioTab({
 
         <button
           onClick={onNavigateToBiblia}
-          className="w-full bg-white border border-gray-200 hover:border-indigo-500 hover:shadow-md text-gray-900 rounded-xl p-4 sm:p-5 flex items-center justify-between transition-all group"
+          className="w-full bg-gray-900 border border-gray-800 hover:border-yellow-500 text-white rounded-xl p-4 sm:p-5 flex items-center justify-between transition-all group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-indigo-50 flex items-center justify-center">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
             </div>
             <div className="text-left">
-              <p className="font-semibold text-sm sm:text-base">Leer la Biblia</p>
-              <p className="text-xs sm:text-sm text-gray-500">Antiguo y Nuevo Testamento</p>
+              <p className="font-bold text-sm sm:text-base">Leer la Biblia</p>
+              <p className="text-xs sm:text-sm text-gray-400">Antiguo y Nuevo Testamento</p>
             </div>
           </div>
-          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-300 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
