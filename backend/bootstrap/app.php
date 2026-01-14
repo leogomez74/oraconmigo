@@ -33,6 +33,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             '/admin/login',
+            '/api/register', // <--- Agrega esto temporalmente
+            '/api/login',
         ]);
 
         $middleware->statefulApi();
