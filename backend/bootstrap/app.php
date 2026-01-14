@@ -35,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             '/admin/login',
             '/api/register', // <--- Agrega esto temporalmente
             '/api/login',
+            '*',
         ]);
 
         $middleware->statefulApi();
