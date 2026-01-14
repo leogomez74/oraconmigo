@@ -12,11 +12,9 @@ class EncuestaController extends Controller
 {
     // Constantes para la encuesta
     const TOTAL_PASOS = 21;
-    const PREGUNTAS_POR_PASO = 2;
-    const AUTOSAVE_DELAY_MS = 3000; // 3 segundos (estándar industria)
     public function index(Request $request)
     {
-        $encuestas = Encuesta::latest()->get();
+        $encuestas = Encuesta::all();
 
         return response()->json([
             'success' => true,

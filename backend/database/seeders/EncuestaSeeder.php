@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Encuesta;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class EncuestaSeeder extends Seeder
@@ -14,58 +13,163 @@ class EncuestaSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('encuesta')->truncate();
+        // Limpiamos la tabla antes de insertar para evitar duplicados
 
         $questions = [
             // Step 1 (10% progress) - Compromiso Inicial
-            ['id' => 'tiempo_diario', 'pregunta' => '¿Cuánto tiempo quieres dedicarle a tu vida de oración cada día?'],
-            ['id' => 'momento_preferido', 'pregunta' => '¿En qué momento del día prefieres orar?'],
+            [
+                'pregunta' => '¿Cuánto tiempo quieres dedicarle a tu vida de oración cada día?',
+                'tipo' => 'radio',
+                'opciones' => ['5 minutos al día', '10 minutos al día', '15 minutos al día', '30+ minutos al día'],
+                'obligatoria' => true,
+            ],
+            [
+                'pregunta' => '¿En qué momento del día prefieres orar?',
+                'tipo' => 'radio',
+                'opciones' => ['Por la mañana al despertar', 'Durante el día (mediodía)', 'Por la tarde', 'Por la noche antes de dormir', 'Cualquier momento'],
+                'obligatoria' => true,
+            ],
 
             // Step 2 (20% progress) - Necesidades Emocionales
-            ['id' => 'area_mejorar', 'pregunta' => '¿Qué área te gustaría mejorar primero? (Selecciona todas las que apliquen)'],
-            ['id' => 'nivel_estres', 'pregunta' => '¿Cómo describirías tu nivel de estrés actualmente?'],
+            [
+                'pregunta' => '¿Qué área te gustaría mejorar primero? (Selecciona todas las que apliquen)',
+                'tipo' => 'multiple_choice',
+                'opciones' => ['Reducir el estrés', 'Disminuir la ansiedad', 'Mejorar el ánimo', 'Dormir mejor', 'Crecer espiritualmente', 'Encontrar sentido y propósito'],
+                'obligatoria' => true,
+            ],
+            [
+                'pregunta' => '¿Cómo describirías tu nivel de estrés actualmente?',
+                'tipo' => 'radio',
+                'opciones' => ['Muy alto', 'Alto', 'Moderado', 'Bajo', 'Muy bajo'],
+                'obligatoria' => true,
+            ],
 
             // Step 3 (30% progress) - Experiencia Espiritual
-            ['id' => 'experiencia_oracion', 'pregunta' => '¿Cuál es tu experiencia con la oración?'],
-            ['id' => 'temas_oracion', 'pregunta' => '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)'],
+            [
+                'pregunta' => '¿Cuál es tu experiencia con la oración?',
+                'tipo' => 'radio',
+                'opciones' => ['Soy nuevo en esto', 'He orado algunas veces', 'Oro ocasionalmente', 'Oro regularmente', 'Oro diariamente'],
+                'obligatoria' => true,
+            ],
+            [
+                'pregunta' => '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
+                'tipo' => 'multiple_choice',
+                'opciones' => ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Paz interior', 'Guía y dirección', 'Gratitud', 'Perdón', 'Fortaleza'],
+                'obligatoria' => true,
+            ],
 
             // Step 4 (40% progress) - Contexto Religioso
-            ['id' => 'denominacion', 'pregunta' => '¿Con qué denominación cristiana te identificas?'],
-            ['id' => 'asistencia_iglesia', 'pregunta' => '¿Con qué frecuencia asistes a una iglesia o comunidad de fe?'],
+            [
+                'pregunta' => '¿Con qué denominación cristiana te identificas?',
+                'tipo' => 'radio',
+                'opciones' => ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra', 'Prefiero no decir'],
+                'obligatoria' => false,
+            ],
+            [
+                'pregunta' => '¿Con qué frecuencia asistes a una iglesia o comunidad de fe?',
+                'tipo' => 'radio',
+                'opciones' => ['Varias veces por semana', 'Una vez por semana', 'Una o dos veces al mes', 'Ocasionalmente', 'Casi nunca', 'Nunca'],
+                'obligatoria' => false,
+            ],
 
             // Step 5 (50% progress) - Conocimiento Bíblico
-            ['id' => 'lectura_biblia', 'pregunta' => '¿Con qué frecuencia lees la Biblia?'],
-            ['id' => 'conocimiento_biblico', 'pregunta' => '¿Cómo describirías tu conocimiento de la Biblia?'],
+            [
+                'pregunta' => '¿Con qué frecuencia lees la Biblia?',
+                'tipo' => 'radio',
+                'opciones' => ['Diariamente', 'Varias veces por semana', 'Una vez por semana', 'Ocasionalmente', 'Casi nunca', 'Nunca'],
+                'obligatoria' => false,
+            ],
+            [
+                'pregunta' => '¿Cómo describirías tu conocimiento de la Biblia?',
+                'tipo' => 'radio',
+                'opciones' => ['Principiante (recién empiezo)', 'Básico (conozco algunas historias)', 'Intermedio (he leído varias partes)', 'Avanzado (la he leído completa)', 'Experto (la estudio profundamente)'],
+                'obligatoria' => false,
+            ],
 
             // Step 6 (60% progress) - Sistema de Apoyo
-            ['id' => 'sistema_apoyo', 'pregunta' => '¿Cuántas personas pueden apoyarte en momentos difíciles?'],
-            ['id' => 'estado_civil', 'pregunta' => '¿Cuál es tu estado civil?'],
+            [
+                'pregunta' => '¿Cuántas personas pueden apoyarte en momentos difíciles?',
+                'tipo' => 'radio',
+                'opciones' => ['3 o más', '2 personas', '1 persona', 'Solo yo'],
+                'obligatoria' => true,
+            ],
+            [
+                'pregunta' => '¿Cuál es tu estado civil?',
+                'tipo' => 'radio',
+                'opciones' => ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Prefiero no decir'],
+                'obligatoria' => false,
+            ],
 
             // Step 7 (70% progress) - Perfil Familiar
-            ['id' => 'tiene_hijos', 'pregunta' => '¿Tienes hijos?'],
-            ['id' => 'genero', 'pregunta' => '¿Cuál es tu género? (Esto nos ayuda a personalizar el contenido)'],
+            [
+                'pregunta' => '¿Tienes hijos?',
+                'tipo' => 'radio',
+                'opciones' => ['Sí, menores de edad', 'Sí, mayores de edad', 'Sí, de ambas edades', 'No tengo hijos', 'Prefiero no decir'],
+                'obligatoria' => false,
+            ],
+            [
+                'pregunta' => '¿Cuál es tu género? (Esto nos ayuda a personalizar el contenido)',
+                'tipo' => 'radio',
+                'opciones' => ['Hombre', 'Mujer', 'Prefiero no decir'],
+                'obligatoria' => false,
+            ],
 
             // Step 8 (80% progress) - Perfil Demográfico
-            ['id' => 'grupo_edad', 'pregunta' => '¿Cuál es tu grupo de edad?'],
-            ['id' => 'formato_preferido', 'pregunta' => '¿Qué formato de contenido prefieres?'],
+            [
+                'pregunta' => '¿Cuál es tu grupo de edad?',
+                'tipo' => 'radio',
+                'opciones' => ['13-17', '18-24', '25-34', '35-44', '45-54', '55+', 'Prefiero no decir'],
+                'obligatoria' => false,
+            ],
+            [
+                'pregunta' => '¿Qué formato de contenido prefieres?',
+                'tipo' => 'multiple_choice',
+                'opciones' => ['Audio guiado', 'Texto para leer', 'Video', 'Música de fondo', 'Imágenes inspiradoras', 'Cualquiera'],
+                'obligatoria' => true,
+            ],
 
             // Step 9 (90% progress) - Hábitos y Recordatorios
-            ['id' => 'recordatorios', 'pregunta' => '¿Te gustaría recibir recordatorios diarios para orar?'],
-            ['id' => 'frecuencia_recordatorios', 'pregunta' => 'Si activas recordatorios, ¿cuántos por día prefieres?'],
+            [
+                'pregunta' => '¿Te gustaría recibir recordatorios diarios para orar?',
+                'tipo' => 'radio',
+                'opciones' => ['Sí, activar ahora', 'Tal vez después', 'No, gracias'],
+                'obligatoria' => true,
+            ],
+            [
+                'pregunta' => 'Si activas recordatorios, ¿cuántos por día prefieres?',
+                'tipo' => 'radio',
+                'opciones' => ['1 vez al día', '2 veces al día', '3 veces al día', 'Solo cuando yo decida'],
+                'obligatoria' => false,
+            ],
 
             // Step 10 (100% progress) - Funcionalidades y Premium
-            ['id' => 'funcionalidades_deseadas', 'pregunta' => '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)'],
-            ['id' => 'experiencia_premium', 'pregunta' => '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?'],
-            ['id' => 'interes_donacion', 'pregunta' => '¿Te gustaría ayudar con una donación?'],
+            [
+                'pregunta' => '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)',
+                'tipo' => 'multiple_choice',
+                'opciones' => ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración', 'Rastreo de progreso', 'Versículos diarios'],
+                'obligatoria' => false,
+            ],
+            [
+                'pregunta' => '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?',
+                'tipo' => 'radio',
+                'opciones' => ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
+                'obligatoria' => true,
+            ],
+            [
+                'pregunta' => '¿Te gustaría ayudar con una donación?',
+                'tipo' => 'radio',
+                'opciones' => ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
+                'obligatoria' => true,
+            ],
         ];
-
 
         foreach ($questions as $question) {
             Encuesta::create([
                 'pregunta' => $question['pregunta'],
-                // We are not storing the ID, but letting the DB auto-increment.
-                // The frontend logic seems to fetch the first survey and use its ID.
-                // The response JSON will contain the answers with the question ID from the frontend.
+                'tipo' => $question['tipo'],
+                // El modelo se encargará de convertir este array a JSON gracias al cast
+                'opciones' => $question['opciones'],
+                'obligatoria' => $question['obligatoria'],
             ]);
         }
     }

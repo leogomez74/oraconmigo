@@ -1,19 +1,27 @@
 'use client';
-
+import { Prompt } from 'next/font/google';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth, logout as authLogout, apiRequest } from '@/lib/auth';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import WelcomeModal from '@/components/WelcomeModal';
 import { useEncuestaAutoSave } from '@/hooks/useEncuestaAutoSave';
+// Nota: Es posible que debas actualizar el tipo PreguntaId en tus types si era un string literal
 import type { PreguntaId } from '@/lib/encuesta-types';
 
-interface Encuesta {
-  id: number;
+// 1. INTERFAZ ACTUALIZADA PARA COINCIDIR CON EL BACKEND DE LARAVEL
+interface Question {
+  id: number; // Ahora es number (Auto-increment de DB)
   pregunta: string;
-  created_at: string;
+  tipo: 'text' | 'textarea' | 'multiple_choice' | 'select' | 'radio';
+  opciones: string[] | null; // Puede ser null si es texto
+  requerida: boolean;
 }
-
+const prompt = Prompt({
+  subsets: ['latin'],
+  weight: '400', // Aquí defines Regular 400
+  // Si necesitas negrita para títulos también, puedes usar un array: ['400', '700']
+});
 interface User {
   id: number;
   nombre: string;
@@ -21,218 +29,48 @@ interface User {
   pais: string;
 }
 
-interface Question {
-  id: string;
-  pregunta: string;
-  tipo: 'text' | 'textarea' | 'multiple_choice' | 'select' | 'radio';
-  opciones?: string[];
-  requerida: boolean;
-}
-
-// Questions configuration - Grouped by progress steps
-// Basado en el onboarding completo de Pray.com + preguntas adicionales (10 pasos, 20 preguntas)
-const questions: Question[] = [
-  // Step 1 (10% progress) - Compromiso Inicial
-  {
-    id: 'tiempo_diario',
-    pregunta: '¿Cuánto tiempo quieres dedicarle a tu vida de oración cada día?',
-    tipo: 'radio',
-    opciones: ['5 minutos al día', '10 minutos al día', '15 minutos al día', '30+ minutos al día'],
-    requerida: true,
-  },
-  {
-    id: 'momento_preferido',
-    pregunta: '¿En qué momento del día prefieres orar?',
-    tipo: 'radio',
-    opciones: ['Por la mañana al despertar', 'Durante el día (mediodía)', 'Por la tarde', 'Por la noche antes de dormir', 'Cualquier momento'],
-    requerida: true,
-  },
-
-  // Step 2 (20% progress) - Necesidades Emocionales
-  {
-    id: 'area_mejorar',
-    pregunta: '¿Qué área te gustaría mejorar primero? (Selecciona todas las que apliquen)',
-    tipo: 'multiple_choice',
-    opciones: ['Reducir el estrés', 'Disminuir la ansiedad', 'Mejorar el ánimo', 'Dormir mejor', 'Crecer espiritualmente', 'Encontrar sentido y propósito'],
-    requerida: true,
-  },
-  {
-    id: 'nivel_estres',
-    pregunta: '¿Cómo describirías tu nivel de estrés actualmente?',
-    tipo: 'radio',
-    opciones: ['Muy alto', 'Alto', 'Moderado', 'Bajo', 'Muy bajo'],
-    requerida: true,
-  },
-
-  // Step 3 (30% progress) - Experiencia Espiritual
-  {
-    id: 'experiencia_oracion',
-    pregunta: '¿Cuál es tu experiencia con la oración?',
-    tipo: 'radio',
-    opciones: ['Soy nuevo en esto', 'He orado algunas veces', 'Oro ocasionalmente', 'Oro regularmente', 'Oro diariamente'],
-    requerida: true,
-  },
-  {
-    id: 'temas_oracion',
-    pregunta: '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
-    tipo: 'multiple_choice',
-    opciones: ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Paz interior', 'Guía y dirección', 'Gratitud', 'Perdón', 'Fortaleza'],
-    requerida: true,
-  },
-
-  // Step 4 (40% progress) - Contexto Religioso
-  {
-    id: 'denominacion',
-    pregunta: '¿Con qué denominación cristiana te identificas?',
-    tipo: 'radio',
-    opciones: ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra', 'Prefiero no decir'],
-    requerida: false,
-  },
-  {
-    id: 'asistencia_iglesia',
-    pregunta: '¿Con qué frecuencia asistes a una iglesia o comunidad de fe?',
-    tipo: 'radio',
-    opciones: ['Varias veces por semana', 'Una vez por semana', 'Una o dos veces al mes', 'Ocasionalmente', 'Casi nunca', 'Nunca'],
-    requerida: false,
-  },
-
-  // Step 5 (50% progress) - Conocimiento Bíblico
-  {
-    id: 'lectura_biblia',
-    pregunta: '¿Con qué frecuencia lees la Biblia?',
-    tipo: 'radio',
-    opciones: ['Diariamente', 'Varias veces por semana', 'Una vez por semana', 'Ocasionalmente', 'Casi nunca', 'Nunca'],
-    requerida: false,
-  },
-  {
-    id: 'conocimiento_biblico',
-    pregunta: '¿Cómo describirías tu conocimiento de la Biblia?',
-    tipo: 'radio',
-    opciones: ['Principiante (recién empiezo)', 'Básico (conozco algunas historias)', 'Intermedio (he leído varias partes)', 'Avanzado (la he leído completa)', 'Experto (la estudio profundamente)'],
-    requerida: false,
-  },
-
-  // Step 6 (60% progress) - Sistema de Apoyo
-  {
-    id: 'sistema_apoyo',
-    pregunta: '¿Cuántas personas pueden apoyarte en momentos difíciles?',
-    tipo: 'radio',
-    opciones: ['3 o más', '2 personas', '1 persona', 'Solo yo'],
-    requerida: true,
-  },
-  {
-    id: 'estado_civil',
-    pregunta: '¿Cuál es tu estado civil?',
-    tipo: 'radio',
-    opciones: ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Prefiero no decir'],
-    requerida: false,
-  },
-
-  // Step 7 (70% progress) - Perfil Familiar
-  {
-    id: 'tiene_hijos',
-    pregunta: '¿Tienes hijos?',
-    tipo: 'radio',
-    opciones: ['Sí, menores de edad', 'Sí, mayores de edad', 'Sí, de ambas edades', 'No tengo hijos', 'Prefiero no decir'],
-    requerida: false,
-  },
-  {
-    id: 'genero',
-    pregunta: '¿Cuál es tu género? (Esto nos ayuda a personalizar el contenido)',
-    tipo: 'radio',
-    opciones: ['Hombre', 'Mujer', 'Prefiero no decir'],
-    requerida: false,
-  },
-
-  // Step 8 (80% progress) - Perfil Demográfico
-  {
-    id: 'grupo_edad',
-    pregunta: '¿Cuál es tu grupo de edad?',
-    tipo: 'radio',
-    opciones: ['13-17', '18-24', '25-34', '35-44', '45-54', '55+', 'Prefiero no decir'],
-    requerida: false,
-  },
-  {
-    id: 'formato_preferido',
-    pregunta: '¿Qué formato de contenido prefieres?',
-    tipo: 'multiple_choice',
-    opciones: ['Audio guiado', 'Texto para leer', 'Video', 'Música de fondo', 'Imágenes inspiradoras', 'Cualquiera'],
-    requerida: true,
-  },
-
-  // Step 9 (90% progress) - Hábitos y Recordatorios
-  {
-    id: 'recordatorios',
-    pregunta: '¿Te gustaría recibir recordatorios diarios para orar?',
-    tipo: 'radio',
-    opciones: ['Sí, activar ahora', 'Tal vez después', 'No, gracias'],
-    requerida: true,
-  },
-  {
-    id: 'frecuencia_recordatorios',
-    pregunta: 'Si activas recordatorios, ¿cuántos por día prefieres?',
-    tipo: 'radio',
-    opciones: ['1 vez al día', '2 veces al día', '3 veces al día', 'Solo cuando yo decida'],
-    requerida: false,
-  },
-
-  // Step 10 (100% progress) - Funcionalidades y Premium
-  {
-    id: 'funcionalidades_deseadas',
-    pregunta: '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)',
-    tipo: 'multiple_choice',
-    opciones: ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración', 'Rastreo de progreso', 'Versículos diarios'],
-    requerida: false,
-  },
-  {
-    id: 'experiencia_premium',
-    pregunta: '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?',
-    tipo: 'radio',
-    opciones: ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
-    requerida: true,
-  },
-  {
-    id: 'interes_donacion',
-    pregunta: '¿Te gustaría ayudar con una donación?',
-    tipo: 'radio',
-    opciones: ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
-    requerida: true,
-  },
-];
-
-// Define progress steps (21 steps with 1 question each = 21 questions total)
-const QUESTIONS_PER_STEP = 1;
-const TOTAL_STEPS = 21;
-
 export default function EncuestaPage() {
   const router = useRouter();
-  const [encuesta, setEncuesta] = useState<Encuesta | null>(null);
+  
+  // Estados de datos
+  const [questionsList, setQuestionsList] = useState<Question[]>([]); // <--- LISTA DINÁMICA
   const [user, setUser] = useState<User | null>(null);
+  
+  // Estados de UI y Carga
   const [loading, setLoading] = useState(true);
   const [loadingLogout, setLoadingLogout] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  
+  // Estados de Lógica de Encuesta
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [lastSavedAnswers, setLastSavedAnswers] = useState<Record<string, any>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({});
-  const [showWelcome, setShowWelcome] = useState(true);
 
-  // Calculate current step and get questions for this step
+  // Constantes de configuración (Ahora TOTAL_STEPS es dinámico)
+  const QUESTIONS_PER_STEP = 1;
+  const TOTAL_STEPS = questionsList.length; // Se calcula según lo que traiga la DB
+
+  // Cálculos de progreso
   const currentStep = Math.floor(currentQuestionIndex / QUESTIONS_PER_STEP) + 1;
-  const progressPercentage = (currentStep / TOTAL_STEPS) * 100;
+  
+  // Evitamos división por cero si aún no cargan las preguntas
+  const progressPercentage = TOTAL_STEPS > 0 ? (currentStep / TOTAL_STEPS) * 100 : 0;
 
-  // Get all questions for the current step
+  // Obtener preguntas actuales de la lista dinámica
   const stepStartIndex = (currentStep - 1) * QUESTIONS_PER_STEP;
   const stepEndIndex = stepStartIndex + QUESTIONS_PER_STEP;
-  const currentStepQuestions = questions.slice(stepStartIndex, stepEndIndex);
+  const currentStepQuestions = questionsList.slice(stepStartIndex, stepEndIndex);
 
-  // ✅ Auto-save hook - Guarda progreso automáticamente cada 3 segundos
-  const { isSaving, saveImmediately, debouncedSave } = useEncuestaAutoSave({
+  // ✅ Auto-save hook
+  const { isSaving, debouncedSave } = useEncuestaAutoSave({
     currentStep,
     currentAnswers: answers,
     lastSavedAnswers: lastSavedAnswers,
-    currentQuestionId: (currentStepQuestions[0]?.id || 'vida_oracion') as PreguntaId,
+    // Convertimos el ID numérico a string para que el hook lo maneje bien
+    currentQuestionId: (currentStepQuestions[0] ? String(currentStepQuestions[0].id) : 'loading') as PreguntaId,
     isSubmitted: submitted,
     onSaveSuccess: () => {
       setLastSavedAnswers(answers);
@@ -242,12 +80,15 @@ export default function EncuestaPage() {
     },
   });
 
-  // Check if all required questions in current step are answered
-  const canProceed = currentStepQuestions.every(q =>
-    !q.requerida || (answers[q.id] !== undefined && answers[q.id] !== '' && (Array.isArray(answers[q.id]) ? answers[q.id].length > 0 : true))
-  );
+  // Validación para avanzar
+  const canProceed = currentStepQuestions.every(q => {
+    // Convertimos el ID a string para buscar en answers (ya que las keys de objetos suelen tratarse como strings)
+    const answer = answers[String(q.id)];
+    if (!q.requerida) return true;
+    return answer !== undefined && answer !== '' && (Array.isArray(answer) ? answer.length > 0 : true);
+  });
 
-  const isLastStep = currentStep === TOTAL_STEPS;
+  const isLastStep = currentStep === TOTAL_STEPS && TOTAL_STEPS > 0;
 
   useEffect(() => {
     checkAuthAndFetch();
@@ -272,7 +113,7 @@ export default function EncuestaPage() {
       }
 
       setUser(userData);
-      await fetchEncuesta();
+      await fetchEncuesta(); // Ahora esto carga las preguntas
     } catch (error) {
       console.error('Error:', error);
       router.push('/register');
@@ -283,6 +124,7 @@ export default function EncuestaPage() {
 
   const fetchEncuesta = async () => {
     try {
+      // Ajusta la ruta si es necesario. Asumimos que /api/encuestas devuelve la lista
       const response = await apiRequest('/api/encuestas', {
         method: 'GET',
       });
@@ -294,17 +136,19 @@ export default function EncuestaPage() {
 
       const data = await response.json();
 
-      if (response.ok && data.data && data.data.length > 0) {
-        setEncuesta(data.data[0]);
+      if (response.ok && data.data) {
+        // Asumiendo que Laravel retorna { success: true, data: [ ...preguntas ] }
+        setQuestionsList(data.data);
+      } else {
+        console.error("Formato de respuesta inesperado:", data);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching encuesta:', error);
     }
   };
 
   const handleLogout = async () => {
     setLoadingLogout(true);
-
     try {
       await authLogout();
     } catch (error) {
@@ -316,14 +160,11 @@ export default function EncuestaPage() {
 
   const handleNext = async () => {
     setDropdownOpen({});
-
-    // ✅ Guardar progreso inmediatamente antes de avanzar
     await debouncedSave.debouncedCallback(answers);
 
     if (isLastStep) {
       handleSubmitRespuesta();
     } else {
-      // Move to next step (skip QUESTIONS_PER_STEP questions)
       setCurrentQuestionIndex(currentQuestionIndex + QUESTIONS_PER_STEP);
     }
   };
@@ -331,34 +172,36 @@ export default function EncuestaPage() {
   const handleBack = () => {
     setDropdownOpen({});
     if (currentStep > 1) {
-      // Move to previous step
       setCurrentQuestionIndex(currentQuestionIndex - QUESTIONS_PER_STEP);
     } else {
       handleLogout();
     }
   };
 
-  const handleAnswerChange = (questionId: string, value: any) => {
+  const handleAnswerChange = (questionId: number, value: any) => {
+    // Usamos el ID como clave (convertido implícitamente a string en el objeto)
     const newAnswers = {
       ...answers,
-      [questionId]: value,
+      [String(questionId)]: value,
     };
     setAnswers(newAnswers);
-
-    // ✅ Auto-save con debounce de 3 segundos
     debouncedSave.debouncedCallback(newAnswers);
   };
 
   const handleSubmitRespuesta = async () => {
-    if (!encuesta) return;
-
+    // Nota: Si necesitas enviar un 'encuesta_id', asegúrate de tenerlo. 
+    // Si solo hay una encuesta activa, tal vez el backend lo infiera o tomes el ID de la primera pregunta o un campo aparte.
+    // Por ahora enviamos las respuestas tal cual.
+    
     setSubmitting(true);
 
     try {
+      // Ajusta el payload según lo que espere tu controlador 'store' de respuestas
       const response = await apiRequest('/respuestas', {
         method: 'POST',
         body: JSON.stringify({
-          encuesta_id: encuesta.id,
+          // Si el backend necesita un ID de encuesta padre, agrégalo aquí.
+          // encuesta_id: 1, 
           respuestas: answers,
         }),
       });
@@ -375,7 +218,7 @@ export default function EncuestaPage() {
   };
 
   const renderQuestionInput = (question: Question) => {
-    const value = answers[question.id];
+    const value = answers[String(question.id)]; // Accedemos usando el ID convertido a string
 
     switch (question.tipo) {
       case 'textarea':
@@ -401,12 +244,12 @@ export default function EncuestaPage() {
         );
 
       case 'select':
-        const isOpen = dropdownOpen[question.id] || false;
+        const isOpen = dropdownOpen[String(question.id)] || false;
         return (
           <div className="relative">
             <button
               type="button"
-              onClick={() => setDropdownOpen({ ...dropdownOpen, [question.id]: !isOpen })}
+              onClick={() => setDropdownOpen({ ...dropdownOpen, [String(question.id)]: !isOpen })}
               className={`w-full px-3 py-3 sm:px-4 sm:py-4 text-sm sm:text-base text-left bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex items-center justify-between ${
                 value ? 'text-gray-700' : 'text-gray-400'
               }`}
@@ -426,7 +269,7 @@ export default function EncuestaPage() {
               <>
                 <div
                   className="fixed inset-0 z-40"
-                  onClick={() => setDropdownOpen({ ...dropdownOpen, [question.id]: false })}
+                  onClick={() => setDropdownOpen({ ...dropdownOpen, [String(question.id)]: false })}
                 />
                 <div className="absolute z-50 w-full mt-2 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-y-auto hide-scrollbar">
                   {question.opciones?.map((opcion) => (
@@ -435,7 +278,7 @@ export default function EncuestaPage() {
                       type="button"
                       onClick={() => {
                         handleAnswerChange(question.id, opcion);
-                        setDropdownOpen({ ...dropdownOpen, [question.id]: false });
+                        setDropdownOpen({ ...dropdownOpen, [String(question.id)]: false });
                       }}
                       className={`w-full px-3 py-3 sm:px-4 sm:py-4 text-left text-sm sm:text-base hover:bg-indigo-50 active:bg-indigo-100 transition-colors ${
                         value === opcion ? 'bg-indigo-50 text-indigo-600 font-medium' : 'text-gray-700'
@@ -466,7 +309,7 @@ export default function EncuestaPage() {
                 >
                   <input
                     type="radio"
-                    name={question.id}
+                    name={String(question.id)}
                     value={opcion}
                     checked={isSelected}
                     onChange={(e) => handleAnswerChange(question.id, e.target.value)}
@@ -541,15 +384,18 @@ export default function EncuestaPage() {
     }
   };
 
-  if (loading) {
-    return <LoadingSpinner message="Cargando encuesta..." />;
+  // 2. CONTROL DE CARGA IMPORTANTE
+  // Si está cargando O si la lista de preguntas está vacía, mostramos el spinner.
+  // Esto previene errores al intentar acceder a questionsList[0]
+  if (loading || questionsList.length === 0) {
+    return <LoadingSpinner message={loading ? "Verificando sesión..." : "Cargando encuesta..."} />;
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className={`${"min-h-screen bg-black flex flex-col"}`}>
       <WelcomeModal isOpen={showWelcome} onClose={() => setShowWelcome(false)} />
       {/* Header */}
-      <div className="flex justify-between items-center px-3 py-2 max-h-[600px]:py-2 sm:px-4 sm:py-3 md:p-4 bg-black">
+      <div className={`${prompt.className} flex justify-between items-center px-3 py-2 max-h-[600px]:py-2 sm:px-4 sm:py-3 md:p-4 bg-black`}>
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 max-h-[600px]:w-6 max-h-[600px]:h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full bg-yellow-500 flex items-center justify-center">
             <svg className="w-3.5 h-3.5 max-h-[600px]:w-3.5 max-h-[600px]:h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -559,7 +405,7 @@ export default function EncuestaPage() {
           <span className="text-white font-semibold tracking-wider text-xs max-h-[600px]:text-xs sm:text-sm md:text-base">ORA</span>
         </div>
         <div className="flex items-center gap-3">
-          {/* ✅ Indicador de auto-save */}
+          {/* Indicador de auto-save */}
           {isSaving && (
             <div className="flex items-center gap-1 text-[10px] max-h-[600px]:text-[10px] sm:text-xs text-gray-500">
               <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
@@ -592,13 +438,8 @@ export default function EncuestaPage() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-3 py-2 max-h-[600px]:px-3 max-h-[600px]:py-2 sm:px-4 sm:py-4 md:px-6 md:py-8 max-w-2xl mx-auto w-full overflow-y-auto">
-        {!encuesta ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg mb-2">No hay encuestas disponibles</p>
-            <p className="text-gray-500 text-sm">Las encuestas aparecerán aquí cuando estén disponibles</p>
-          </div>
-        ) : submitted ? (
+      <div className={`${prompt.className} flex-1 px-3 py-2 max-h-[600px]:px-3 max-h-[600px]:py-2 sm:px-4 sm:py-4 md:px-6 md:py-8 max-w-2xl mx-auto w-full overflow-y-auto`}>
+        {submitted ? (
           <div className="text-center py-8 sm:py-12">
             <div className="mb-6">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
@@ -644,7 +485,7 @@ export default function EncuestaPage() {
 
               {/* Multiple Questions */}
               <div className="space-y-4 max-h-[600px]:space-y-3 sm:space-y-6 md:space-y-8">
-                {currentStepQuestions.map((question, index) => (
+                {currentStepQuestions.map((question) => (
                   <div key={question.id}>
                     <h2 className="text-base max-h-[600px]:text-sm sm:text-lg md:text-xl lg:text-2xl font-bold text-white mb-2 max-h-[600px]:mb-2 sm:mb-3 md:mb-4 leading-tight">
                       {question.pregunta}

@@ -10,5 +10,13 @@ class Encuesta extends Model
 
     protected $fillable = [
         'pregunta',
+        'tipo',
+        'opciones',
+        'obligatoria',
+    ];
+
+    protected $casts = [
+        'opciones' => 'array',
+        'obligatoria' => 'boolean',
     ];
 }
