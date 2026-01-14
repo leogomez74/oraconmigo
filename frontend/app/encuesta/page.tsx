@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth, logout as authLogout, apiRequest } from '@/lib/auth';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import WelcomeModal from '@/components/WelcomeModal';
 import { useEncuestaAutoSave } from '@/hooks/useEncuestaAutoSave';
 import type { PreguntaId } from '@/lib/encuesta-types';
 
@@ -190,11 +191,18 @@ const questions: Question[] = [
     opciones: ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
     requerida: true,
   },
+  {
+    id: 'interes_donacion',
+    pregunta: '¿Te gustaría ayudar con una donación?',
+    tipo: 'radio',
+    opciones: ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
+    requerida: true,
+  },
 ];
 
-// Define progress steps (20 steps with 1 question each = 20 questions total)
+// Define progress steps (21 steps with 1 question each = 21 questions total)
 const QUESTIONS_PER_STEP = 1;
-const TOTAL_STEPS = 20;
+const TOTAL_STEPS = 21;
 
 export default function EncuestaPage() {
   const router = useRouter();
@@ -208,6 +216,7 @@ export default function EncuestaPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({});
+  const [showWelcome, setShowWelcome] = useState(true);
 
   // Calculate current step and get questions for this step
   const currentStep = Math.floor(currentQuestionIndex / QUESTIONS_PER_STEP) + 1;
@@ -538,6 +547,7 @@ export default function EncuestaPage() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
+      <WelcomeModal isOpen={showWelcome} onClose={() => setShowWelcome(false)} />
       {/* Header */}
       <div className="flex justify-between items-center px-3 py-2 max-h-[600px]:py-2 sm:px-4 sm:py-3 md:p-4 bg-black">
         <div className="flex items-center gap-2">

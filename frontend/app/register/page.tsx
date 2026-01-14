@@ -97,6 +97,7 @@ export default function RegisterPage() {
     }
   };
 
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div style={{"height": "70vh"}} className="bg-gray-900 p-5 sm:p-4 md:p-6 rounded-2xl w-full max-w-xl overflow-y-auto">

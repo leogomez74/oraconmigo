@@ -5,9 +5,9 @@
 
 export const ENCUESTA_CONFIG = {
   // Estructura
-  TOTAL_PASOS: 20,
+  TOTAL_PASOS: 21,
   PREGUNTAS_POR_PASO: 1,
-  TOTAL_PREGUNTAS: 20,
+  TOTAL_PREGUNTAS: 21,
 
   // Auto-save timing (3 segundos - estándar industria)
   AUTOSAVE_DELAY_MS: 3000,
@@ -43,30 +43,32 @@ export const ENCUESTA_CONFIG = {
     'frecuencia_recordatorios', // Paso 18 (90%)
     'funcionalidades_deseadas', // Paso 19 (95%)
     'experiencia_premium',    // Paso 20 (100%)
+    'interes_donacion',       // Paso 21 (100%)
   ] as const,
 
-  // Definición de pasos (20 pasos individuales)
+  // Definición de pasos (21 pasos individuales)
   PASOS: {
     1: { nombre: 'Tiempo de oración', porcentaje: 5, preguntas: ['tiempo_diario'] },
     2: { nombre: 'Momento del día', porcentaje: 10, preguntas: ['momento_preferido'] },
-    3: { nombre: 'Áreas a mejorar', porcentaje: 15, preguntas: ['area_mejorar'] },
-    4: { nombre: 'Nivel de estrés', porcentaje: 20, preguntas: ['nivel_estres'] },
-    5: { nombre: 'Experiencia con oración', porcentaje: 25, preguntas: ['experiencia_oracion'] },
-    6: { nombre: 'Temas de oración', porcentaje: 30, preguntas: ['temas_oracion'] },
-    7: { nombre: 'Denominación', porcentaje: 35, preguntas: ['denominacion'] },
-    8: { nombre: 'Asistencia a iglesia', porcentaje: 40, preguntas: ['asistencia_iglesia'] },
-    9: { nombre: 'Lectura bíblica', porcentaje: 45, preguntas: ['lectura_biblia'] },
-    10: { nombre: 'Conocimiento bíblico', porcentaje: 50, preguntas: ['conocimiento_biblico'] },
-    11: { nombre: 'Sistema de apoyo', porcentaje: 55, preguntas: ['sistema_apoyo'] },
-    12: { nombre: 'Estado civil', porcentaje: 60, preguntas: ['estado_civil'] },
-    13: { nombre: 'Hijos', porcentaje: 65, preguntas: ['tiene_hijos'] },
-    14: { nombre: 'Género', porcentaje: 70, preguntas: ['genero'] },
-    15: { nombre: 'Edad', porcentaje: 75, preguntas: ['grupo_edad'] },
-    16: { nombre: 'Formato de contenido', porcentaje: 80, preguntas: ['formato_preferido'] },
-    17: { nombre: 'Recordatorios', porcentaje: 85, preguntas: ['recordatorios'] },
-    18: { nombre: 'Frecuencia', porcentaje: 90, preguntas: ['frecuencia_recordatorios'] },
-    19: { nombre: 'Funcionalidades', porcentaje: 95, preguntas: ['funcionalidades_deseadas'] },
-    20: { nombre: 'Premium', porcentaje: 100, preguntas: ['experiencia_premium'] },
+    3: { nombre: 'Áreas a mejorar', porcentaje: 14, preguntas: ['area_mejorar'] },
+    4: { nombre: 'Nivel de estrés', porcentaje: 19, preguntas: ['nivel_estres'] },
+    5: { nombre: 'Experiencia con oración', porcentaje: 24, preguntas: ['experiencia_oracion'] },
+    6: { nombre: 'Temas de oración', porcentaje: 29, preguntas: ['temas_oracion'] },
+    7: { nombre: 'Denominación', porcentaje: 33, preguntas: ['denominacion'] },
+    8: { nombre: 'Asistencia a iglesia', porcentaje: 38, preguntas: ['asistencia_iglesia'] },
+    9: { nombre: 'Lectura bíblica', porcentaje: 43, preguntas: ['lectura_biblia'] },
+    10: { nombre: 'Conocimiento bíblico', porcentaje: 48, preguntas: ['conocimiento_biblico'] },
+    11: { nombre: 'Sistema de apoyo', porcentaje: 52, preguntas: ['sistema_apoyo'] },
+    12: { nombre: 'Estado civil', porcentaje: 57, preguntas: ['estado_civil'] },
+    13: { nombre: 'Hijos', porcentaje: 62, preguntas: ['tiene_hijos'] },
+    14: { nombre: 'Género', porcentaje: 67, preguntas: ['genero'] },
+    15: { nombre: 'Edad', porcentaje: 71, preguntas: ['grupo_edad'] },
+    16: { nombre: 'Formato de contenido', porcentaje: 76, preguntas: ['formato_preferido'] },
+    17: { nombre: 'Recordatorios', porcentaje: 81, preguntas: ['recordatorios'] },
+    18: { nombre: 'Frecuencia', porcentaje: 86, preguntas: ['frecuencia_recordatorios'] },
+    19: { nombre: 'Funcionalidades', porcentaje: 90, preguntas: ['funcionalidades_deseadas'] },
+    20: { nombre: 'Premium', porcentaje: 95, preguntas: ['experiencia_premium'] },
+    21: { nombre: 'Donación', porcentaje: 100, preguntas: ['interes_donacion'] },
   } as const,
 } as const;
 
