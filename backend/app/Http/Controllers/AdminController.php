@@ -20,8 +20,8 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Métricas básicas
-        $totalUsers = People::count();
-        $todayUsers = People::whereDate('created_at', today())->count();
+        $totalUsers = People::all()->count();
+        $todayUsers = People::whereDate('created_at', '=', today())->count();
         $weekUsers = People::where('created_at', '>=', now()->subWeek())->count();
         $monthUsers = People::where('created_at', '>=', now()->subMonth())->count();
 
@@ -29,13 +29,13 @@ class AdminController extends Controller
         $activeUsers = People::whereHas('respuestas')->distinct()->count();
 
         // Encuestas completadas
-        $completedSurveys = Respuesta::distinct('people_id')->count('people_id');
+        $completedSurveys = Respuesta::distinct()->count('people_id');
 
         // Usuarios que han leído la Biblia (al menos 1 capítulo)
-        $bibleReaders = BibleReading::distinct('people_id')->count('people_id');
+        $bibleReaders = BibleReading::distinct()->count('people_id');
 
         // Lecturas de Biblia totales
-        $totalBibleReadings = BibleReading::count();
+        $totalBibleReadings = BibleReading::all()->count();
 
         // Lecturas de Biblia esta semana
         $weekBibleReadings = BibleReading::where('created_at', '>=', now()->subWeek())->count();
@@ -125,14 +125,14 @@ class AdminController extends Controller
     public function funnel()
     {
         // Paso 1: Usuarios registrados
-        $registered = People::count();
+        $registered = People::all()->count();
 
         // Paso 2: Usuarios que completaron la encuesta
-        $completedSurvey = Respuesta::distinct('people_id')->count('people_id');
+        $completedSurvey = Respuesta::distinct()->count('people_id');
 
         // Paso 3: Usuarios que completaron al menos una oración
         $completedPrayer = OracionUsuario::whereNotNull('completada_at')
-            ->distinct('people_id')
+            ->distinct()
             ->count('people_id');
 
         // Paso 4: Usuarios premium (temporal, 0 hasta implementar suscripciones)
@@ -251,7 +251,7 @@ class AdminController extends Controller
     public function destroy($id)
     {
         $user = People::findOrFail($id);
-        $user->delete();
+        $user->delete($id);
 
         return redirect()->back()->with('success', 'Usuario eliminado correctamente.');
     }
@@ -355,8 +355,8 @@ class AdminController extends Controller
             ->get()
             ->pluck('total', 'estado');
 
-        $totalRegistrados = People::count();
-        $sinIniciar = $totalRegistrados - EncuestaProgreso::count();
+        $totalRegistrados = People::all()->count();
+        $sinIniciar = $totalRegistrados - EncuestaProgreso::all()->count();
 
         // 2. Drop-off por paso (usuarios en cada paso que NO avanzaron)
         $dropoffPorPaso = [];
@@ -416,7 +416,7 @@ class AdminController extends Controller
      */
     public function getEncuestaDropoffMetrics()
     {
-        $totalRegistrados = People::count();
+        $totalRegistrados = People::all()->count();
         $iniciaron = EncuestaProgreso::count();
         $completaron = EncuestaProgreso::where('completada', true)->count();
 

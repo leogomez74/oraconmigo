@@ -308,7 +308,7 @@ export async function getCurrentUser() {
       };
     }
 
-    return responseData;
+    return responseData.data;
   } catch (error: any) {
     if (error.status || error.errors) {
       throw error;
@@ -330,7 +330,7 @@ export async function getCurrentUser() {
 export async function checkAuth() {
   try {
     const data = await getCurrentUser();
-    return data.user;
+    return data;
   } catch (error) {
     return null;
   }

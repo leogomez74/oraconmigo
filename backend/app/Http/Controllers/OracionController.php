@@ -45,12 +45,12 @@ class OracionController extends Controller
             ] : null;
 
             return $oracion;
-        });
-
+            });
         return response()->json([
             'success' => true,
-            'oraciones' => $oraciones,
+            'data' => $oraciones,
         ]);
+       
     }
 
     /**
@@ -79,7 +79,7 @@ class OracionController extends Controller
 
         return response()->json([
             'success' => true,
-            'oracion' => $oracion,
+            'data' => $oracion,
         ]);
     }
 
@@ -114,7 +114,7 @@ class OracionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Oración completada',
-            'oracion_usuario' => $oracionUsuario,
+            'data' => $oracionUsuario,
         ]);
     }
 
@@ -155,7 +155,7 @@ class OracionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Progreso actualizado',
-            'oracion_usuario' => $oracionUsuario,
+            'data' => $oracionUsuario,
         ]);
     }
 
@@ -173,7 +173,7 @@ class OracionController extends Controller
 
         return response()->json([
             'success' => true,
-            'oraciones' => $oraciones,
+            'data' => $oraciones,
         ]);
     }
 
@@ -189,7 +189,7 @@ class OracionController extends Controller
 
         return response()->json([
             'success' => true,
-            'categorias' => $categorias,
+            'data' => $categorias,
         ]);
     }
 }

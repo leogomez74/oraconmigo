@@ -26,7 +26,7 @@ class RegistrationController extends Controller
         return response()->json([
             'success' => true,
             'message' => '¡Registro exitoso!',
-            'user' => [
+            'data' => [
                 'id' => $person->id,
                 'nombre' => $person->nombre,
                 'email' => $person->email,

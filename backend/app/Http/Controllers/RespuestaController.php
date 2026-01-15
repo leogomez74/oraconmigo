@@ -21,6 +21,7 @@ class RespuestaController extends Controller
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Respuesta guardada exitosamente',
             'data' => $respuesta,
         ], 201);

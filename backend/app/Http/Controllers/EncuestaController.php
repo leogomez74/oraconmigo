@@ -81,13 +81,13 @@ class EncuestaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $e->errors(),
+                'data' => $e->errors(),
             ], 422);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al guardar progreso',
-                'error' => $e->getMessage(),
+                'data' => $e->getMessage(),
             ], 500);
         }
     }
@@ -105,13 +105,14 @@ class EncuestaController extends Controller
 
             return response()->json([
                 'success' => true,
+                'message' => 'Progreso obtenido correctamente',
                 'data' => $progreso,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener progreso',
-                'error' => $e->getMessage(),
+                'data' => $e->getMessage(),
             ], 500);
         }
     }
@@ -151,7 +152,7 @@ class EncuestaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al marcar encuesta como completada',
-                'error' => $e->getMessage(),
+                'data' => $e->getMessage(),
             ], 500);
         }
     }

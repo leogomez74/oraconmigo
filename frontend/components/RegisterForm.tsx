@@ -104,27 +104,27 @@ export default function RegisterForm() {
 
   return (
     <>
-      <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6 p-2 max-h-[600px]:p-2 sm:p-3 md:p-4 bg-gray-800 border border-gray-700 rounded-xl">
-        <p className="text-xs sm:text-sm text-gray-300 leading-relaxed break-words">
+      <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8 p-3 max-h-[600px]:p-2.5 sm:p-4 md:p-5 bg-blue-50 border border-blue-200 rounded-xl">
+        <p className="text-xs sm:text-sm text-gray-700 leading-relaxed break-words">
           <strong>Nota:</strong> Próximamente implementaremos autenticación con código OTP por email (sin contraseña).
         </p>
       </div>
 
       {success && (
-        <div className="mb-4 max-h-[600px]:mb-2 sm:mb-6 p-3 max-h-[600px]:p-2 sm:p-4 bg-green-900 text-green-300 rounded-xl text-center font-medium text-sm sm:text-base">
+        <div className="mb-5 max-h-[600px]:mb-3 sm:mb-6 md:mb-7 p-4 max-h-[600px]:p-3 sm:p-5 md:p-6 bg-green-100 text-green-800 rounded-xl text-center font-medium text-sm sm:text-base">
           ¡Registro exitoso!
         </div>
       )}
 
       {generalError && (
-        <div className="mb-4 max-h-[600px]:mb-2 sm:mb-6 p-3 max-h-[600px]:p-2 sm:p-4 bg-red-900 border border-red-800 text-red-300 rounded-xl text-sm sm:text-base">
+        <div className="mb-5 max-h-[600px]:mb-3 sm:mb-6 md:mb-7 p-4 max-h-[600px]:p-3 sm:p-5 md:p-6 bg-red-100 border border-red-300 text-red-800 rounded-xl text-sm sm:text-base">
           <strong>Error:</strong> {generalError}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
-          <label htmlFor="nombre" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
+        <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8">
+          <label htmlFor="nombre" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
             Nombre
           </label>
           <input
@@ -132,19 +132,19 @@ export default function RegisterForm() {
             id="nombre"
             value={formData.nombre}
             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-            className="w-full px-3 py-2 max-h-[600px]:py-2 sm:py-3 md:px-4 md:py-4 text-sm sm:text-sm md:text-base text-white bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent placeholder:text-gray-500"
+            className="w-full px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base md:text-base text-black bg-blue-50 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-400"
             placeholder="Tu nombre completo"
             required
             minLength={2}
             maxLength={255}
           />
           {errors.nombre && (
-            <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.nombre[0]}</p>
+            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.nombre[0]}</p>
           )}
         </div>
 
-        <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
-          <label htmlFor="email" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
+        <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8">
+          <label htmlFor="email" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
             Email
           </label>
           <input
@@ -152,18 +152,18 @@ export default function RegisterForm() {
             id="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-3 py-2 max-h-[600px]:py-2 sm:py-3 md:px-4 md:py-4 text-sm sm:text-sm md:text-base text-white bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent placeholder:text-gray-500"
+            className="w-full px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base md:text-base text-black bg-blue-50 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-400"
             placeholder="tucorreo@ejemplo.com"
             required
             maxLength={255}
           />
           {errors.email && (
-            <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.email[0]}</p>
+            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.email[0]}</p>
           )}
         </div>
 
-        <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
-          <label className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
+        <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8">
+          <label className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
             País
           </label>
           <CountrySelect
@@ -173,13 +173,13 @@ export default function RegisterForm() {
           />
         </div>
 
-        <div className="mb-6 max-h-[600px]:mb-4 sm:mb-6 md:mb-8">
-          <label htmlFor="whatsapp" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
+        <div className="mb-7 max-h-[600px]:mb-5 sm:mb-8 md:mb-9">
+          <label htmlFor="whatsapp" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
             WhatsApp <span className="text-gray-500 text-xs">(opcional)</span>
           </label>
           <div className="flex">
             <div
-              className="w-[80px] sm:w-[100px] px-2 py-2 max-h-[600px]:py-2 sm:py-3 md:px-4 md:py-4 text-sm sm:text-sm md:text-base text-gray-300 bg-gray-700 border border-gray-700 rounded-l-xl border-r-0 flex items-center justify-center font-medium select-none"
+              className="w-[85px] sm:w-[105px] px-3 py-3 max-h-[600px]:px-2 max-h-[600px]:py-2.5 sm:px-4 sm:py-3.5 md:px-4 md:py-4 text-sm sm:text-base md:text-base text-black bg-blue-100 border border-blue-300 rounded-l-xl border-r-0 flex items-center justify-center font-medium select-none"
             >
               {formData.phonePrefix}
             </div>
@@ -191,21 +191,20 @@ export default function RegisterForm() {
                 const val = e.target.value.replace(/\D/g, '');
                 setFormData({ ...formData, whatsapp: val });
               }}
-              className="flex-1 px-3 py-2 max-h-[600px]:py-2 sm:py-3 md:px-4 md:py-4 text-sm sm:text-sm md:text-base text-white bg-gray-800 border border-gray-700 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:z-10 placeholder:text-gray-500"
+              className="flex-1 px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base md:text-base text-black bg-blue-50 border border-blue-300 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 placeholder:text-gray-400"
               placeholder="1234567890"
               maxLength={15}
             />
           </div>
           {errors.whatsapp && (
-            <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.whatsapp[0]}</p>
+            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.whatsapp[0]}</p>
           )}
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          style={{"margin":"2.7vh 0"}}
-          className="w-full bg-yellow-500 text-black py-2.5 max-h-[600px]:py-2 sm:py-3 md:py-4 px-4 sm:px-4 md:px-6 text-sm sm:text-base md:text-lg font-bold rounded-xl hover:bg-yellow-400 active:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          className="w-full bg-blue-600 text-white py-3.5 mt-4 max-h-[600px]:py-3 max-h-[600px]:mt-3 sm:py-4 sm:mt-5 md:py-4.5 md:mt-6 px-5 sm:px-6 md:px-6 text-sm sm:text-base md:text-lg font-bold rounded-xl hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
         >
           {loading ? 'Registrando...' : 'Registrar'}
         </button>

@@ -4,9 +4,9 @@ import RegisterForm from '@/components/RegisterForm';
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <div style={{"height": "70vh"}} className="bg-gray-900 p-5 sm:p-4 md:p-6 rounded-2xl w-full max-w-xl overflow-y-auto">
-        <h1 className="text-xl max-h-[600px]:text-lg sm:text-2xl md:text-3xl font-bold text-white mb-5 max-h-[600px]:mb-3 sm:mb-5">
+    <div className="min-h-screen flex items-center justify-center bg-white px-4 sm:px-6">
+      <div style={{"height": "90vh"}} className="bg-white p-6 max-h-[600px]:p-4 sm:p-7 md:p-8 rounded-2xl w-full max-w-xl overflow-y-auto">
+        <h1 className="text-xl max-h-[600px]:text-lg sm:text-2xl md:text-3xl font-bold text-black mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8">
           Registro
         </h1>
 

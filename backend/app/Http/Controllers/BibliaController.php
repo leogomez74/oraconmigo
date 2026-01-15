@@ -28,11 +28,12 @@ class BibliaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Lectura ya registrada hoy',
+                'data' => $existingReading,
             ]);
         }
 
         // Crear nuevo registro de lectura
-        BibleReading::create([
+        $newReading = BibleReading::create([
             'people_id' => $request->user()->id,
             'book' => $validated['book'],
             'chapter' => $validated['chapter'],
@@ -41,6 +42,7 @@ class BibliaController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Lectura registrada correctamente',
+            'data' => $newReading,
         ]);
     }
 }

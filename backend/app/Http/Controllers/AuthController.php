@@ -26,11 +26,10 @@ class AuthController extends Controller
         }
 
         Auth::login($person);
-        $request->session()->regenerate();
-
         return response()->json([
             'success' => true,
-            'user' => [
+            'message' => 'Inicio de sesión exitoso',
+            'data' => [
                 'id' => $person->id,
                 'nombre' => $person->nombre,
                 'email' => $person->email,
@@ -53,7 +52,8 @@ class AuthController extends Controller
         $person = People::find(Auth::id());
         return response()->json([
             'success' => true,
-            'user' => [
+            'message' => 'Usuario obtenido correctamente',
+            'data' => [
                 'id' => $person->id,
                 'nombre' => $person->nombre,
                 'email' => $person->email,
