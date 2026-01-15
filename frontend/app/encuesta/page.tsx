@@ -7,12 +7,6 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import WelcomeModal from '@/components/WelcomeModal';
 import { useEncuestaAutoSave } from '@/hooks/useEncuestaAutoSave';
 import type { PreguntaId } from '@/lib/encuesta-types';
-import { Prompt } from 'next/font/google';
-
-const prompt = Prompt({
-  subsets: ['latin'],
-  weight: '400',
-});
 
 // 1. INTERFAZ ACTUALIZADA (Acepta string o number para ID)
 interface Question {
@@ -538,14 +532,14 @@ export default function EncuestaPage() {
 
   if (loading || questionsList.length === 0) {
     return (
-      <div className={prompt.className}>
+      <div>
          <LoadingSpinner message={loading ? "Verificando sesión..." : "Cargando encuesta..."} />
       </div>
     );
   }
 
   return (
-    <div className={`${prompt.className} min-h-screen bg-white flex flex-col`}>
+    <div className="min-h-screen bg-white flex flex-col">
       <WelcomeModal isOpen={showWelcome} onClose={() => setShowWelcome(false)} />
       {/* Header */}
       <div className="flex justify-between items-center px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5 bg-white border-b border-gray-200">

@@ -10,12 +10,12 @@ class RespuestaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'encuesta_id' => 'required|exists:encuesta,id',
+            'encuesta_id' => 'nullable|exists:encuesta,id',
             'respuestas' => 'required|array',
         ]);
 
         $respuesta = Respuesta::create([
-            'encuesta_id' => $validated['encuesta_id'],
+            'encuesta_id' => $validated['encuesta_id'] ?? null,
             'people_id' => $request->user()->id,
             'respuestas' => $validated['respuestas'],
         ]);
