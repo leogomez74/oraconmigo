@@ -246,14 +246,6 @@ export default function EncuestaPage() {
     checkAuthAndFetch();
   }, []);
 
-  useEffect(() => {
-    if (submitted) {
-      const timer = setTimeout(() => {
-        router.push('/dashboard');
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [submitted, router]);
 
   const checkAuthAndFetch = async () => {
     try {
@@ -594,19 +586,8 @@ export default function EncuestaPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4 px-4">¡Gracias por tu respuesta!</h2>
-              <p className="text-gray-600 text-sm sm:text-base px-4 mb-8">Tu opinión ha sido registrada exitosamente.</p>
-
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="bg-blue-600 text-white py-3.5 px-10 rounded-xl font-semibold text-sm sm:text-base hover:bg-blue-700 active:bg-blue-800 transition-colors"
-              >
-                Ir al Dashboard
-              </button>
-
-              <p className="text-xs sm:text-sm text-gray-500 mt-5">
-                Serás redirigido automáticamente en 3 segundos...
-              </p>
+              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4 px-4">¡Gracias por tu tiempo!</h2>
+              <p className="text-gray-600 text-sm sm:text-base px-4">Nos comunicaremos con usted pronto.</p>
             </div>
           </div>
         ) : currentStepQuestions.length > 0 ? (
