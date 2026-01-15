@@ -40,11 +40,17 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        // Logout de sesión (Sanctum SPA authentication)
+        Auth::guard('web')->logout();
+
+        // Invalidar y regenerar sesión
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json([
+            'success' => true,
+            'message' => 'Sesión cerrada exitosamente',
+        ]);
     }
 
     public function me(Request $request)
