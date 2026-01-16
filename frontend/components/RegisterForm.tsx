@@ -92,7 +92,7 @@ export default function RegisterForm() {
         router.push('/encuesta');
       }
     } catch (error: any) {
-      console.error('Error:', error);
+      console.error('Error:', error.message || error);
       if (error.errors && Object.keys(error.errors).length > 0) {
         setErrors(error.errors);
       }

@@ -25,7 +25,7 @@ interface User {
 }
 
 // 2. MOCK DATA (Tus preguntas de respaldo)
-const MOCK_QUESTIONS: Question[] = [
+/*const MOCK_QUESTIONS: Question[] = [
   // Step 1
   {
     id: 'tiempo_diario',
@@ -183,7 +183,7 @@ const MOCK_QUESTIONS: Question[] = [
     opciones: ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
     requerida: true,
   },
-];
+];*/
 
 export default function EncuestaPage() {
   const router = useRouter();
@@ -191,6 +191,7 @@ export default function EncuestaPage() {
   // Estados de datos
   const [questionsList, setQuestionsList] = useState<Question[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [encuestaId, setEncuestaId] = useState<number | null>(null);
   
   // Estados de UI y Carga
   const [loading, setLoading] = useState(true);
@@ -220,6 +221,7 @@ export default function EncuestaPage() {
 
   // Hook de Auto-Save
   const { isSaving, debouncedSave } = useEncuestaAutoSave({
+    encuestaId,
     currentStep,
     currentAnswers: answers,
     lastSavedAnswers: lastSavedAnswers,
@@ -280,17 +282,18 @@ export default function EncuestaPage() {
       const data = await response.json();
 
       // 3. LÓGICA DE FALLBACK: Si hay datos, úsalos. Si no, usa el Mock.
-      if (response.ok && data.data && Array.isArray(data.data) && data.data.length > 0) {
+      if (response.ok && data.id && data.data && Array.isArray(data.data) && data.data.length > 0) {
         console.log("Cargando encuesta desde base de datos...");
+        setEncuestaId(data.id);
         setQuestionsList(data.data);
       } else {
         console.warn("No se encontraron encuestas en DB o formato incorrecto. Usando MOCK DATA.");
-        setQuestionsList(MOCK_QUESTIONS);
+        //setQuestionsList(MOCK_QUESTIONS);
       }
     } catch (error) {
       console.error('Error fetching encuesta, usando fallback:', error);
       // En caso de error de red, también usamos el Mock
-      setQuestionsList(MOCK_QUESTIONS);
+      //setQuestionsList(MOCK_QUESTIONS);
     }
   };
 
@@ -340,6 +343,7 @@ export default function EncuestaPage() {
       const response = await apiRequest('/respuestas', {
         method: 'POST',
         body: JSON.stringify({
+          encuesta_id: encuestaId,
           respuestas: answers,
         }),
       });

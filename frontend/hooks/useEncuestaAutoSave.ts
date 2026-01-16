@@ -4,6 +4,7 @@ import { apiRequest } from '@/lib/auth';
 import type { GuardarProgresoPayload, PreguntaId } from '@/lib/encuesta-types';
 
 interface UseEncuestaAutoSaveOptions {
+  encuestaId: number | null;
   currentStep: number;
   currentAnswers: Record<string, any>;
   lastSavedAnswers: Record<string, any>;
@@ -14,6 +15,7 @@ interface UseEncuestaAutoSaveOptions {
 }
 
 export function useEncuestaAutoSave({
+  encuestaId,
   currentStep,
   currentAnswers,
   lastSavedAnswers,
@@ -50,6 +52,10 @@ export function useEncuestaAutoSave({
         respuestas_parciales: answers,
         estado: estado as any,
       };
+      
+      if (encuestaId) {
+        payload.encuesta_id = encuestaId;
+      }
 
       await apiRequest('/api/encuesta/progreso', {
         method: 'POST',
@@ -83,6 +89,10 @@ export function useEncuestaAutoSave({
       estado: 'en_progreso',
     };
 
+    if (encuestaId) {
+      payload.encuesta_id = encuestaId;
+    }
+    
     // Extraer token de las cookies para Sanctum
     const xsrfToken = document.cookie
       .split('; ')
