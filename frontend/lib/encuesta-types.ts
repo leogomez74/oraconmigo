@@ -22,7 +22,6 @@ export interface EncuestaProgreso {
 
 // Payload para guardar progreso (POST /api/encuesta/progreso)
 export interface GuardarProgresoPayload {
-  encuesta_id?: number;
   paso_actual: number;
   ultimo_paso_completado: number;
   ultima_pregunta_vista: PreguntaId;

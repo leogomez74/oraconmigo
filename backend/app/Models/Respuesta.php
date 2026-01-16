@@ -19,7 +19,7 @@ class Respuesta extends Model
 
     public function encuesta(): BelongsTo
     {
-        return $this->belongsTo(Encuesta::class,'encuesta_id');
+        return $this->belongsTo(Encuesta::class);
     }
 
     public function person(): BelongsTo
