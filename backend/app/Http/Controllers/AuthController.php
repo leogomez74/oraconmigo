@@ -61,6 +61,7 @@ class AuthController extends Controller
             'data' => [
                 'telefono' => $person->telefono,
                 'nombre' => $person->nombre,
+                'apellido' => $person->apellido,
                 'email' => $person->email,
                 'pais' => $person->pais,
             ]

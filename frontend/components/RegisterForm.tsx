@@ -106,11 +106,6 @@ export default function RegisterForm() {
 
   return (
     <>
-      <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8 p-3 max-h-[600px]:p-2.5 sm:p-4 md:p-5 bg-blue-50 border border-blue-200 rounded-xl">
-        <p className="text-xs sm:text-sm text-gray-700 leading-relaxed break-words">
-          <strong>Nota:</strong> Próximamente implementaremos autenticación con código OTP por email (sin contraseña).
-        </p>
-      </div>
 
       {success && (
         <div className="mb-5 max-h-[600px]:mb-3 sm:mb-6 md:mb-7 p-4 max-h-[600px]:p-3 sm:p-5 md:p-6 bg-green-100 text-green-800 rounded-xl text-center font-medium text-sm sm:text-base">
@@ -196,7 +191,7 @@ export default function RegisterForm() {
 
         <div className="mb-7 max-h-[600px]:mb-5 sm:mb-8 md:mb-9">
           <label htmlFor="telefono" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
-            telefono <span className="text-gray-500 text-xs">(opcional)</span>
+            telefono
           </label>
           <div className="flex">
             <div

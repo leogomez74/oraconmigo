@@ -12,14 +12,16 @@ class RegistrationController extends Controller
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
             'email' => 'required|email|unique:people,email|max:255',
             'pais' => 'required|string|max:255',
-            'whatsapp' => 'required|string|max:255|unique:people,telefono',
+            'telefono' => 'required|string|max:255|unique:people,telefono',
         ]);
 
         $person = People::create([
-            'telefono' => $validated['whatsapp'],
+            'telefono' => $validated['telefono'],
             'nombre' => $validated['nombre'],
+            'apellido' => $validated['apellido'],
             'email' => $validated['email'],
             'pais' => $validated['pais'],
         ]);
@@ -34,6 +36,7 @@ class RegistrationController extends Controller
             'data' => [
                 'telefono' => $person->telefono,
                 'nombre' => $person->nombre,
+                'apellido' => $person->apellido,
                 'email' => $person->email,
                 'pais' => $person->pais,
             ]
