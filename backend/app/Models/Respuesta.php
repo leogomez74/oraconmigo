@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Respuesta extends Model
 {
     protected $fillable = [
-        'encuesta_id',
         'people_id',
         'respuestas',
     ];
@@ -16,11 +15,6 @@ class Respuesta extends Model
     protected $casts = [
         'respuestas' => 'array',
     ];
-
-    public function encuesta(): BelongsTo
-    {
-        return $this->belongsTo(Encuesta::class);
-    }
 
     public function person(): BelongsTo
     {
