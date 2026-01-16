@@ -10,10 +10,11 @@ export default function RegisterForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     nombre: '',
+    apellido:'',
     email: '',
     pais: '',
-    whatsapp: '',
-    phonePrefix: '+54', // Default
+    telefono: '',
+    phonePrefix: '', // Default
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [generalError, setGeneralError] = useState<string>('');
@@ -50,10 +51,10 @@ export default function RegisterForm() {
       newErrors.pais = ['Debes seleccionar un país'];
     }
 
-    if (formData.whatsapp) {
-      const cleanNumber = formData.whatsapp.replace(/\D/g, '');
+    if (formData.telefono) {
+      const cleanNumber = formData.telefono.replace(/\D/g, '');
       if (cleanNumber.length < 8 || cleanNumber.length > 15) {
-        newErrors.whatsapp = ['El número de teléfono debe tener entre 8 y 15 dígitos'];
+        newErrors.telefono = ['El número de teléfono debe tener entre 8 y 15 dígitos'];
       }
     }
 
@@ -77,9 +78,10 @@ export default function RegisterForm() {
     // Combine prefix and number for the backend
     const submissionData = {
       nombre: formData.nombre,
+      apellido: formData.apellido,
       email: formData.email,
       pais: formData.pais,
-      whatsapp: formData.whatsapp ? `${formData.phonePrefix}${formData.whatsapp}` : '',
+      telefono: formData.telefono ? `${formData.phonePrefix}${formData.telefono}` : '',
     };
 
     try {
@@ -142,6 +144,25 @@ export default function RegisterForm() {
             <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.nombre[0]}</p>
           )}
         </div>
+        <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8">
+          <label htmlFor="nombre" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
+            Apellido
+          </label>
+          <input
+            type="text"
+            id="apellido"
+            value={formData.apellido}
+            onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
+            className="w-full px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base md:text-base text-black bg-blue-50 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-400"
+            placeholder="Tu apellido completo"
+            required
+            minLength={2}
+            maxLength={255}
+          />
+          {errors.apellido && (
+            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.apellido[0]}</p>
+          )}
+        </div>
 
         <div className="mb-6 max-h-[600px]:mb-4 sm:mb-7 md:mb-8">
           <label htmlFor="email" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
@@ -174,8 +195,8 @@ export default function RegisterForm() {
         </div>
 
         <div className="mb-7 max-h-[600px]:mb-5 sm:mb-8 md:mb-9">
-          <label htmlFor="whatsapp" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
-            WhatsApp <span className="text-gray-500 text-xs">(opcional)</span>
+          <label htmlFor="telefono" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
+            telefono <span className="text-gray-500 text-xs">(opcional)</span>
           </label>
           <div className="flex">
             <div
@@ -185,19 +206,19 @@ export default function RegisterForm() {
             </div>
             <input
               type="text"
-              id="whatsapp"
-              value={formData.whatsapp}
+              id="telefono"
+              value={formData.telefono}
               onChange={(e) => {
                 const val = e.target.value.replace(/\D/g, '');
-                setFormData({ ...formData, whatsapp: val });
+                setFormData({ ...formData, telefono: val });
               }}
               className="flex-1 px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base md:text-base text-black bg-blue-50 border border-blue-300 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 placeholder:text-gray-400"
               placeholder="1234567890"
               maxLength={15}
             />
           </div>
-          {errors.whatsapp && (
-            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.whatsapp[0]}</p>
+          {errors.telefono && (
+            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.telefono[0]}</p>
           )}
         </div>
 

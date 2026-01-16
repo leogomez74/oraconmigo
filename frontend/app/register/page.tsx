@@ -10,10 +10,11 @@ export default function RegisterPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     nombre: '',
+    apellido: '',
     email: '',
     pais: '',
-    whatsapp: '',
-    phonePrefix: '+54', // Default
+    telefono: '',
+    phonePrefix: '', // Default
   });
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [generalError, setGeneralError] = useState<string>('');
@@ -45,8 +46,8 @@ export default function RegisterPage() {
       newErrors.pais = ['Debes seleccionar un país'];
     }
 
-    if (formData.whatsapp) {
-      const cleanNumber = formData.whatsapp.replace(/\D/g, '');
+    if (formData.telefono) {
+      const cleanNumber = formData.telefono.replace(/\D/g, '');
       if (cleanNumber.length < 8 || cleanNumber.length > 15) {
         newErrors.whatsapp = ['El número de teléfono debe tener entre 8 y 15 dígitos'];
       }
@@ -72,9 +73,10 @@ export default function RegisterPage() {
     // Combine prefix and number for the backend
     const submissionData = {
       nombre: formData.nombre,
+      apellido: formData.apellido,
       email: formData.email,
       pais: formData.pais,
-      whatsapp: formData.whatsapp ? `${formData.phonePrefix}${formData.whatsapp}` : '',
+      whatsapp: formData.telefono ? `${formData.phonePrefix}${formData.telefono}` : '',
     };
 
     try {
@@ -138,6 +140,26 @@ export default function RegisterPage() {
             )}
           </div>
 
+            <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
+              <label htmlFor="apellido" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
+                Apellido
+              </label>
+              <input
+                type="text"
+                id="apellido"
+                value={formData.apellido}
+                onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
+                className="w-full px-3 py-2 max-h-[600px]:py-2 sm:py-3 md:px-4 md:py-4 text-sm sm:text-sm md:text-base text-white bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent placeholder:text-gray-500"
+                placeholder="Tu apellido completo"
+                required
+                minLength={2}
+                maxLength={255}
+              />
+              {errors.apellido && (
+                <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.apellido[0]}</p>
+              )}
+            </div>
+
           <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6">
             <label htmlFor="email" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
               Email
@@ -182,10 +204,10 @@ export default function RegisterPage() {
                 type="text"
                 id="whatsapp"
                 required
-                value={formData.whatsapp}
+                value={formData.telefono}
                 onChange={(e) => {
                   const val = e.target.value.replace(/\D/g, '');
-                  setFormData({ ...formData, whatsapp: val });
+                  setFormData({ ...formData, telefono: val });
                 }}
                 className="flex-1 px-3 py-2 max-h-[600px]:py-2 sm:py-3 md:px-4 md:py-4 text-sm sm:text-sm md:text-base text-white bg-gray-800 border border-gray-700 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:z-10 placeholder:text-gray-500"
                 placeholder="1234567890"

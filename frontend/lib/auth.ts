@@ -89,9 +89,10 @@ export async function apiRequest(
  */
 export async function register(data: {
   nombre: string;
+  apellido: string;
   email: string;
   pais: string;
-  whatsapp?: string;
+  telefono?: string;
 }) {
   try {
     // Get CSRF cookie first
