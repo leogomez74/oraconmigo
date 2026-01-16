@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Respuesta;
+use App\Models\RespuestaMultiple;
+use Illuminate\Support\Facades\DB;
 
 class RespuestaController extends Controller
 {
@@ -13,15 +15,52 @@ class RespuestaController extends Controller
             'respuestas' => 'required|array',
         ]);
 
-        $respuesta = Respuesta::create([
-            'people_id' => $request->user()->telefono,
-            'respuestas' => $validated['respuestas'],
-        ]);
+        $peopleId = $request->user()->telefono;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Respuesta guardada exitosamente',
-            'data' => $respuesta,
-        ], 201);
+        DB::beginTransaction();
+
+        try {
+            foreach ($validated['respuestas'] as $pregunta => $respuesta) {
+                if (is_array($respuesta)) {
+                    // Respuesta múltiple: crear registro con respuesta null
+                    $respuestaModel = Respuesta::create([
+                        'people_id' => $peopleId,
+                        'pregunta' => $pregunta,
+                        'respuesta' => null,
+                    ]);
+
+                    // Crear las opciones múltiples
+                    foreach ($respuesta as $opcion) {
+                        RespuestaMultiple::create([
+                            'respuesta_id' => $respuestaModel->id,
+                            'people_id' => $peopleId,
+                            'opcion' => $opcion,
+                        ]);
+                    }
+                } else {
+                    // Respuesta única
+                    Respuesta::create([
+                        'people_id' => $peopleId,
+                        'pregunta' => $pregunta,
+                        'respuesta' => $respuesta,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Respuestas guardadas exitosamente',
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar las respuestas',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

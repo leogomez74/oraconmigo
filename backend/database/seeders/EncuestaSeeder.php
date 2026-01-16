@@ -135,15 +135,15 @@ class EncuestaSeeder extends Seeder
                 'obligatoria' => false,
             ],
             [
-                'pregunta' => '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?',
+                'pregunta' => '¿Estarías en contra de tener una versión premium?',
                 'tipo' => 'radio',
-                'opciones' => ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
+                'opciones' => ['No', 'Si, prefiero la versión gratuita', 'Depende de qué ofrece.'],
                 'obligatoria' => true,
             ],
             [
-                'pregunta' => '¿Te gustaría ayudar con una donación?',
+                'pregunta' => '¿Estarías en contra de hacer un pequeño donativo?',
                 'tipo' => 'radio',
-                'opciones' => ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
+                'opciones' => ['No', 'Si', 'Tal vez más adelante'],
                 'obligatoria' => true,
             ],
         ];

@@ -337,7 +337,7 @@ export default function EncuestaPage() {
   const handleSubmitRespuesta = async () => {
     setSubmitting(true);
     try {
-      const response = await apiRequest('/respuestas', {
+      const response = await apiRequest('/api/respuestas', {
         method: 'POST',
         body: JSON.stringify({
           respuestas: answers,
