@@ -252,7 +252,7 @@ export default function EncuestaPage() {
       const userData = await checkAuth();
 
       if (!userData) {
-        router.push('/register');
+        router.push('/');
         return;
       }
 
@@ -260,7 +260,7 @@ export default function EncuestaPage() {
       await fetchEncuesta();
     } catch (error) {
       console.error('Error:', error);
-      router.push('/register');
+      router.push('/');
     } finally {
       setLoading(false);
     }
@@ -273,7 +273,7 @@ export default function EncuestaPage() {
       });
 
       if (response.status === 401) {
-        router.push('/register');
+        router.push('/');
         return;
       }
 
@@ -301,7 +301,7 @@ export default function EncuestaPage() {
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      router.push('/register');
+      router.push('/');
     }
   };
 
