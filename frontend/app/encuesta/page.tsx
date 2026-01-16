@@ -586,8 +586,8 @@ export default function EncuestaPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4 px-4">¡Gracias por tu tiempo!</h2>
-              <p className="text-gray-600 text-sm sm:text-base px-4">Nos comunicaremos con usted pronto.</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4 px-4">¡Gracias por su tiempo!</h2>
+              <p className="text-gray-600 text-sm sm:text-base px-4">Nos comunicaremos contigo pronto.</p>
             </div>
           </div>
         ) : currentStepQuestions.length > 0 ? (

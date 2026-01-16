@@ -105,12 +105,6 @@ export default function RegisterPage() {
           Registro
         </h1>
 
-        <div className="mb-5 max-h-[600px]:mb-3 sm:mb-5 md:mb-6 p-2 max-h-[600px]:p-2 sm:p-3 md:p-4 bg-gray-800 border border-gray-700 rounded-xl">
-          <p className="text-xs sm:text-sm text-gray-300 leading-relaxed break-words">
-            <strong>Nota:</strong> Próximamente implementaremos autenticación con código OTP por email (sin contraseña).
-          </p>
-        </div>
-
         {success && (
           <div className="mb-4 max-h-[600px]:mb-2 sm:mb-6 p-3 max-h-[600px]:p-2 sm:p-4 bg-green-900 text-green-300 rounded-xl text-center font-medium text-sm sm:text-base">
             ¡Registro exitoso!
@@ -176,7 +170,7 @@ export default function RegisterPage() {
 
           <div className="mb-6 max-h-[600px]:mb-4 sm:mb-6 md:mb-8">
             <label htmlFor="whatsapp" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-gray-300 mb-2 max-h-[600px]:mb-1 sm:mb-2">
-              WhatsApp <span className="text-gray-500 text-xs">(opcional)</span>
+              WhatsApp
             </label>
             <div className="flex">
               <div
@@ -187,6 +181,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 id="whatsapp"
+                required
                 value={formData.whatsapp}
                 onChange={(e) => {
                   const val = e.target.value.replace(/\D/g, '');

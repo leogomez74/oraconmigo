@@ -14,10 +14,15 @@ class RegistrationController extends Controller
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|unique:people,email|max:255',
             'pais' => 'required|string|max:255',
-            'whatsapp' => 'nullable|string|max:255',
+            'whatsapp' => 'required|string|max:255|unique:people,telefono',
         ]);
 
-        $person = People::create($validated);
+        $person = People::create([
+            'telefono' => $validated['whatsapp'],
+            'nombre' => $validated['nombre'],
+            'email' => $validated['email'],
+            'pais' => $validated['pais'],
+        ]);
 
         // Auto-login after registration using session
         Auth::login($person);
@@ -27,7 +32,7 @@ class RegistrationController extends Controller
             'success' => true,
             'message' => '¡Registro exitoso!',
             'data' => [
-                'id' => $person->id,
+                'telefono' => $person->telefono,
                 'nombre' => $person->nombre,
                 'email' => $person->email,
                 'pais' => $person->pais,

@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\People;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    /*public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -36,7 +35,7 @@ class AuthController extends Controller
                 'pais' => $person->pais,
             ]
         ]);
-    }
+    }*/
 
     public function logout(Request $request)
     {
@@ -60,7 +59,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Usuario obtenido correctamente',
             'data' => [
-                'id' => $person->id,
+                'telefono' => $person->telefono,
                 'nombre' => $person->nombre,
                 'email' => $person->email,
                 'pais' => $person->pais,

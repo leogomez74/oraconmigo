@@ -127,26 +127,11 @@ class EncuestaSeeder extends Seeder
                 'opciones' => ['Audio guiado', 'Texto para leer', 'Video', 'Música de fondo', 'Imágenes inspiradoras', 'Cualquiera'],
                 'obligatoria' => true,
             ],
-
-            // Step 9 (90% progress) - Hábitos y Recordatorios
-            [
-                'pregunta' => '¿Te gustaría recibir recordatorios diarios para orar?',
-                'tipo' => 'radio',
-                'opciones' => ['Sí, activar ahora', 'Tal vez después', 'No, gracias'],
-                'obligatoria' => true,
-            ],
-            [
-                'pregunta' => 'Si activas recordatorios, ¿cuántos por día prefieres?',
-                'tipo' => 'radio',
-                'opciones' => ['1 vez al día', '2 veces al día', '3 veces al día', 'Solo cuando yo decida'],
-                'obligatoria' => false,
-            ],
-
             // Step 10 (100% progress) - Funcionalidades y Premium
             [
                 'pregunta' => '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)',
                 'tipo' => 'multiple_choice',
-                'opciones' => ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración', 'Rastreo de progreso', 'Versículos diarios'],
+                'opciones' => ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Rastreo de progreso', 'Versículos diarios'],
                 'obligatoria' => false,
             ],
             [

@@ -12,11 +12,19 @@ class People extends Authenticatable
 
     protected $table = 'people';
 
+    /**
+     * Primary key es telefono (string, no autoincrement)
+     */
+    protected $primaryKey = 'telefono';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
+        'telefono',
         'nombre',
+        'apellido',
         'email',
         'pais',
-        'whatsapp',
         'is_admin',
     ];
 
