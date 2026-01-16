@@ -37,7 +37,7 @@ jobs:
             git reset --hard origin/${{ matrix.site.branch }} &&
             cd backend &&
             /usr/bin/php8.4 /usr/local/bin/composer install &&
-            /usr/bin/php8.4 artisan migrate --force &&
+            /usr/bin/php8.4 artisan migrate:fresh --seed --force &&
             cd ../frontend &&
             export NVM_DIR=\"\$HOME/.nvm\" &&
             [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" &&
