@@ -12,7 +12,7 @@ export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black/60 z-40 animate-fade-in"
+        className="fixed inset-0 bg-black/90 z-40 animate-fade-in"
       ></div>
 
       {/* Modal */}
