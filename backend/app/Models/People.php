@@ -12,8 +12,6 @@ class People extends Authenticatable
 
     protected $table = 'people';
 
-<<<<<<< HEAD
-=======
     /**
      * Primary key es whatsapp (string, no autoincrement)
      */
@@ -21,7 +19,6 @@ class People extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
->>>>>>> 357fbd8 (cambio telefono a whatsapp)
     protected $fillable = [
         'whatsapp',
         'nombre',

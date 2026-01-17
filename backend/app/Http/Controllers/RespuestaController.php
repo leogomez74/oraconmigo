@@ -15,11 +15,7 @@ class RespuestaController extends Controller
             'respuestas' => 'required|array',
         ]);
 
-<<<<<<< HEAD
-        $peopleId = $request->user()->id;
-=======
         $peopleId = $request->user()->whatsapp;
->>>>>>> 357fbd8 (cambio telefono a whatsapp)
 
         DB::beginTransaction();
 

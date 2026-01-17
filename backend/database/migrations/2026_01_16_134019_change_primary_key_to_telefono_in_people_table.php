@@ -99,7 +99,6 @@ return new class extends Migration
             $table->foreign('people_id')->references('whatsapp')->on('people')->onDelete('cascade');
             $table->index('people_id');
         });
->>>>>>> 357fbd8 (cambio telefono a whatsapp)
     }
 
     /**

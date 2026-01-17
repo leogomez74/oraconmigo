@@ -16,11 +16,7 @@ class Respuesta extends Model
 
     public function person(): BelongsTo
     {
-<<<<<<< HEAD
-        return $this->belongsTo(People::class, 'people_id');
-=======
         return $this->belongsTo(People::class, 'people_id', 'whatsapp');
->>>>>>> 357fbd8 (cambio telefono a whatsapp)
     }
 
     public function multiples(): HasMany
