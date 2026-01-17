@@ -54,7 +54,11 @@ export default function RegisterForm() {
     if (formData.whatsapp) {
       const cleanNumber = formData.whatsapp.replace(/\D/g, '');
       if (cleanNumber.length < 8 || cleanNumber.length > 15) {
+<<<<<<< HEAD
         newErrors.whatsapp = ['El número de WhatsApp debe tener entre 8 y 15 dígitos'];
+=======
+        newErrors.whatsapp = ['El número de teléfono debe tener entre 8 y 15 dígitos'];
+>>>>>>> 357fbd8 (cambio telefono a whatsapp)
       }
     }
 
@@ -200,9 +204,15 @@ export default function RegisterForm() {
           />
         </div>
 
+<<<<<<< HEAD
         <div>
           <label htmlFor="whatsapp" className="block text-xs sm:text-sm md:text-base font-medium text-black mb-2">
             WhatsApp
+=======
+        <div className="mb-7 max-h-[600px]:mb-5 sm:mb-8 md:mb-9">
+          <label htmlFor="whatsapp" className="block text-xs max-h-[600px]:text-xs sm:text-sm md:text-base font-medium text-black mb-2.5 max-h-[600px]:mb-2 sm:mb-3 md:mb-3.5">
+            whatsapp
+>>>>>>> 357fbd8 (cambio telefono a whatsapp)
           </label>
           <div className="flex">
             <div
@@ -211,6 +221,7 @@ export default function RegisterForm() {
               {formData.phonePrefix}
             </div>
             <input
+<<<<<<< HEAD
               type="tel"
               id="whatsapp"
               value={formData.whatsapp}
@@ -218,6 +229,11 @@ export default function RegisterForm() {
               autoComplete="tel-national"
               enterKeyHint="done"
               pattern="[0-9]*"
+=======
+              type="text"
+              id="whatsapp"
+              value={formData.whatsapp}
+>>>>>>> 357fbd8 (cambio telefono a whatsapp)
               onChange={(e) => {
                 const val = e.target.value.replace(/\D/g, '');
                 setFormData({ ...formData, whatsapp: val });
@@ -227,10 +243,15 @@ export default function RegisterForm() {
               maxLength={15}
             />
           </div>
+<<<<<<< HEAD
           {(errors.whatsapp || errors.telefono) && (
             <p className="mt-2 text-xs sm:text-sm text-red-600">
               {errors.whatsapp?.[0] ?? errors.telefono?.[0]}
             </p>
+=======
+          {errors.whatsapp && (
+            <p className="mt-2 text-xs sm:text-sm text-red-600">{errors.whatsapp[0]}</p>
+>>>>>>> 357fbd8 (cambio telefono a whatsapp)
           )}
         </div>
 

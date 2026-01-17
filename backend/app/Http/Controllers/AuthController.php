@@ -59,8 +59,6 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Usuario obtenido correctamente',
             'data' => [
-                // compat: algunos clientes esperan "telefono"
-                'telefono' => $person->whatsapp,
                 'whatsapp' => $person->whatsapp,
                 'nombre' => $person->nombre,
                 'apellido' => $person->apellido,

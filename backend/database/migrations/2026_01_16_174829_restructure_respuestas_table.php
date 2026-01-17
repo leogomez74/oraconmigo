@@ -20,6 +20,11 @@ return new class extends Migration
             $table->string('pregunta');
             $table->text('respuesta')->nullable(); // null si es respuesta múltiple
             $table->timestamps();
+<<<<<<< HEAD
+=======
+
+            $table->foreign('people_id')->references('whatsapp')->on('people')->onDelete('cascade');
+>>>>>>> 357fbd8 (cambio telefono a whatsapp)
         });
 
         Schema::create('respuesta_multiples', function (Blueprint $table) {
@@ -28,6 +33,11 @@ return new class extends Migration
             $table->foreignId('people_id')->constrained('people')->onDelete('cascade');
             $table->text('opcion');
             $table->timestamps();
+<<<<<<< HEAD
+=======
+
+            $table->foreign('people_id')->references('whatsapp')->on('people')->onDelete('cascade');
+>>>>>>> 357fbd8 (cambio telefono a whatsapp)
         });
     }
 

@@ -15,15 +15,13 @@ class RegistrationController extends Controller
             'apellido' => 'required|string|max:255',
             'email' => 'required|email|unique:people,email|max:255',
             'pais' => 'required|string|max:255',
-            // En DB se guarda en "whatsapp". Aceptamos "whatsapp" (nuevo) o "telefono" (legacy).
-            'whatsapp' => 'required_without:telefono|string|max:255|unique:people,whatsapp',
-            'telefono' => 'required_without:whatsapp|string|max:255|unique:people,whatsapp',
+            'whatsapp' => 'required|string|max:255|unique:people,whatsapp',
         ]);
 
         $whatsapp = $validated['whatsapp'] ?? $validated['telefono'];
 
         $person = People::create([
-            'whatsapp' => $whatsapp,
+            'whatsapp' => $validated['whatsapp'],
             'nombre' => $validated['nombre'],
             'apellido' => $validated['apellido'],
             'email' => $validated['email'],
@@ -38,8 +36,6 @@ class RegistrationController extends Controller
             'success' => true,
             'message' => '¡Registro exitoso!',
             'data' => [
-                // compat: algunos clientes esperan "telefono"
-                'telefono' => $person->whatsapp,
                 'whatsapp' => $person->whatsapp,
                 'nombre' => $person->nombre,
                 'apellido' => $person->apellido,
