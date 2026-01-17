@@ -16,7 +16,7 @@ return new class extends Migration
 
         Schema::create('respuestas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('people_id')->constrained('people')->onDelete('cascade');
+            $table->string('people_id');
             $table->string('pregunta');
             $table->text('respuesta')->nullable(); // null si es respuesta múltiple
             $table->timestamps();
@@ -27,7 +27,7 @@ return new class extends Migration
         Schema::create('respuesta_multiples', function (Blueprint $table) {
             $table->id();
             $table->foreignId('respuesta_id')->constrained('respuestas')->onDelete('cascade');
-            $table->foreignId('people_id')->constrained('people')->onDelete('cascade');
+            $table->string('people_id');
             $table->text('opcion');
             $table->timestamps();
 
