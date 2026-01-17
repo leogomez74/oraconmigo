@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { checkAuth as authCheck } from '@/lib/auth';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -19,11 +19,7 @@ export default function CheckoutPage() {
     cvv: '',
   });
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const userData = await authCheck();
 
@@ -37,14 +33,23 @@ export default function CheckoutPage() {
       console.error('Error:', error);
       router.push('/');
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      void checkAuth();
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, [checkAuth]);
 
   const precioMensual = 4.99;
   const precioAnual = 39.99;
   const precio = plan === 'mensual' ? precioMensual : precioAnual;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let { name, value } = e.target;
+    const { name } = e.target;
+    let { value } = e.target;
 
     // Formatear número de tarjeta
     if (name === 'numeroTarjeta') {
@@ -218,7 +223,7 @@ export default function CheckoutPage() {
 
           {/* Términos */}
           <div className="text-xs text-gray-600 text-center">
-            Al hacer clic en "Confirmar pago", aceptas los{' '}
+            Al hacer clic en &quot;Confirmar pago&quot;, aceptas los{' '}
             <a href="#" className="text-indigo-600 underline">Términos de servicio</a> y la{' '}
             <a href="#" className="text-indigo-600 underline">Política de privacidad</a>.
             {plan === 'mensual' && (

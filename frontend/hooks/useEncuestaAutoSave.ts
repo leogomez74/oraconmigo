@@ -5,8 +5,8 @@ import type { GuardarProgresoPayload, PreguntaId } from '@/lib/encuesta-types';
 
 interface UseEncuestaAutoSaveOptions {
   currentStep: number;
-  currentAnswers: Record<string, any>;
-  lastSavedAnswers: Record<string, any>;
+  currentAnswers: Record<string, unknown>;
+  lastSavedAnswers: Record<string, unknown>;
   currentQuestionId: PreguntaId;
   isSubmitted: boolean;
   onSaveSuccess?: () => void;
@@ -36,7 +36,7 @@ export function useEncuestaAutoSave({
   /**
    * FUNCIÓN PRINCIPAL DE GUARDADO (Via apiRequest)
    */
-  const saveImmediately = useCallback(async (answers: Record<string, any>, estado: string = 'en_progreso') => {
+  const saveImmediately = useCallback(async (answers: Record<string, unknown>, estado: GuardarProgresoPayload['estado'] = 'en_progreso') => {
     if (isSubmitted) return;
 
     setIsSaving(true);
@@ -48,7 +48,7 @@ export function useEncuestaAutoSave({
         ultimo_paso_completado: estado === 'completada' ? step : step - 1,
         ultima_pregunta_vista: qId,
         respuestas_parciales: answers,
-        estado: estado as any,
+        estado,
       };
 
       await apiRequest('/api/encuesta/progreso', {
@@ -70,7 +70,7 @@ export function useEncuestaAutoSave({
    * GUARDADO DE EMERGENCIA (Al cerrar pestaña)
    * Sustituye a sendBeacon para evitar errores de CORS con Sanctum.
    */
-  const saveOnExit = useCallback((answers: Record<string, any>) => {
+  const saveOnExit = useCallback((answers: Record<string, unknown>) => {
     if (isSubmitted) return;
 
     const { currentStep: step, currentQuestionId: qId } = navStateRef.current;

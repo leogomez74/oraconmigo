@@ -9,6 +9,7 @@ class Encuesta extends Model
     protected $table = 'encuesta';
 
     protected $fillable = [
+        'codigo',
         'pregunta',
         'tipo',
         'opciones',

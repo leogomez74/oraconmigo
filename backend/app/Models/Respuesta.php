@@ -16,7 +16,7 @@ class Respuesta extends Model
 
     public function person(): BelongsTo
     {
-        return $this->belongsTo(People::class, 'people_id', 'telefono');
+        return $this->belongsTo(People::class, 'people_id');
     }
 
     public function multiples(): HasMany

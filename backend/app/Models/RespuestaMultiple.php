@@ -20,6 +20,6 @@ class RespuestaMultiple extends Model
 
     public function person(): BelongsTo
     {
-        return $this->belongsTo(People::class, 'people_id', 'telefono');
+        return $this->belongsTo(People::class, 'people_id');
     }
 }

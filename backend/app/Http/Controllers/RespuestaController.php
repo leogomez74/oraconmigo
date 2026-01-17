@@ -15,7 +15,7 @@ class RespuestaController extends Controller
             'respuestas' => 'required|array',
         ]);
 
-        $peopleId = $request->user()->telefono;
+        $peopleId = $request->user()->id;
 
         DB::beginTransaction();
 

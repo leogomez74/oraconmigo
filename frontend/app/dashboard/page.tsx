@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth as authCheck, logout as authLogout } from '@/lib/auth';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -23,12 +23,7 @@ export default function DashboardPage() {
   const [currentTime, setCurrentTime] = useState('');
   const [activeTab, setActiveTab] = useState<'inicio' | 'biblia' | 'oraciones'>('inicio');
 
-  useEffect(() => {
-    checkAuth();
-    updateTime();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const userData = await authCheck();
 
@@ -44,9 +39,9 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
 
-  const updateTime = () => {
+  const updateTime = useCallback(() => {
     const now = new Date();
     const hours = now.getHours();
     let greeting = '';
@@ -60,7 +55,12 @@ export default function DashboardPage() {
     }
 
     setCurrentTime(greeting);
-  };
+  }, []);
+
+  useEffect(() => {
+    void checkAuth();
+    updateTime();
+  }, [checkAuth, updateTime]);
 
   const handleLogout = async () => {
     setLoadingLogout(true);

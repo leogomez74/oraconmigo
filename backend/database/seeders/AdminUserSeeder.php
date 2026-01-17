@@ -19,7 +19,7 @@ class AdminUserSeeder extends Seeder
             [
                 'nombre' => 'Administrador',
                 'pais' => 'Argentina',
-                'telefono' => '+5491112345678',
+                'whatsapp' => '+5491112345678',
                 'is_admin' => true,
             ]
         );

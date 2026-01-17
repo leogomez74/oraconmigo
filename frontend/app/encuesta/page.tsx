@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth, logout as authLogout, apiRequest } from '@/lib/auth';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import WelcomeModal from '@/components/WelcomeModal';
+import ThankYouCover from '@/components/ThankYouCover';
 import { useEncuestaAutoSave } from '@/hooks/useEncuestaAutoSave';
 import type { PreguntaId } from '@/lib/encuesta-types';
+
+type AnswerValue = string | string[];
 
 // 1. INTERFAZ ACTUALIZADA (Acepta string o number para ID)
 interface Question {
@@ -15,13 +18,6 @@ interface Question {
   tipo: 'text' | 'textarea' | 'multiple_choice' | 'select' | 'radio';
   opciones?: string[];
   requerida: boolean;
-}
-
-interface User {
-  id: number;
-  nombre: string;
-  email: string;
-  pais: string;
 }
 
 // 2. MOCK DATA (Tus preguntas de respaldo)
@@ -190,18 +186,20 @@ export default function EncuestaPage() {
   
   // Estados de datos
   const [questionsList, setQuestionsList] = useState<Question[]>([]);
-  const [user, setUser] = useState<User | null>(null);
   
   // Estados de UI y Carga
   const [loading, setLoading] = useState(true);
   const [loadingLogout, setLoadingLogout] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [showThankYou, setShowThankYou] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const introTimerRef = useRef<number | null>(null);
   
   // Estados de Lógica de Encuesta
-  const [answers, setAnswers] = useState<Record<string, any>>({});
-  const [lastSavedAnswers, setLastSavedAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
+  const [lastSavedAnswers, setLastSavedAnswers] = useState<Record<string, AnswerValue>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({});
 
@@ -219,7 +217,7 @@ export default function EncuestaPage() {
   const currentStepQuestions = questionsList.slice(stepStartIndex, stepEndIndex);
 
   // Hook de Auto-Save
-  const { isSaving, debouncedSave } = useEncuestaAutoSave({
+  const { isSaving, saveImmediately, debouncedSave } = useEncuestaAutoSave({
     currentStep,
     currentAnswers: answers,
     lastSavedAnswers: lastSavedAnswers,
@@ -237,36 +235,91 @@ export default function EncuestaPage() {
   const canProceed = currentStepQuestions.every(q => {
     const answer = answers[String(q.id)];
     if (!q.requerida) return true;
-    return answer !== undefined && answer !== '' && (Array.isArray(answer) ? answer.length > 0 : true);
+    if (answer === undefined) return false;
+    if (Array.isArray(answer)) return answer.length > 0;
+    return answer !== '';
   });
 
   const isLastStep = currentStep === TOTAL_STEPS && TOTAL_STEPS > 0;
 
-  useEffect(() => {
-    checkAuthAndFetch();
-  }, []);
-
-
-  const checkAuthAndFetch = async () => {
+  const fetchProgresoAndRestore = useCallback(async () => {
     try {
-      const userData = await checkAuth();
+      const response = await apiRequest('/api/encuesta/progreso', {
+        method: 'GET',
+      });
 
-      if (!userData) {
-        router.push('/');
-        return;
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const progreso = data?.data;
+
+      if (!progreso) return;
+
+      const restoredAnswers = (progreso.respuestas_parciales || {}) as Record<string, AnswerValue>;
+
+      if (Object.keys(restoredAnswers).length > 0) {
+        setAnswers(restoredAnswers);
+        setLastSavedAnswers(restoredAnswers);
+        if (introTimerRef.current) {
+          window.clearTimeout(introTimerRef.current);
+          introTimerRef.current = null;
+        }
+        try {
+          sessionStorage.setItem('oc_thankyou_shown', '1');
+        } catch {
+          // ignore
+        }
+        setShowThankYou(false);
+        setShowWelcome(false);
       }
 
-      setUser(userData);
-      await fetchEncuesta();
+      if (typeof progreso.paso_actual === 'number' && progreso.paso_actual >= 1) {
+        setCurrentQuestionIndex((progreso.paso_actual - 1) * QUESTIONS_PER_STEP);
+      }
     } catch (error) {
-      console.error('Error:', error);
-      router.push('/');
-    } finally {
-      setLoading(false);
+      console.error('Error restoring encuesta progress:', error);
     }
-  };
+  }, [QUESTIONS_PER_STEP]);
 
-  const fetchEncuesta = async () => {
+  useEffect(() => {
+    // Show the thank-you cover (003) only when coming from registration.
+    let shouldShow = false;
+
+    try {
+      const alreadyShown = sessionStorage.getItem('oc_thankyou_shown') === '1';
+      const fromRegister = sessionStorage.getItem('oc_show_thankyou') === '1';
+      shouldShow = fromRegister && !alreadyShown;
+    } catch {
+      // If storage is blocked, skip the thank-you screen.
+      shouldShow = false;
+    }
+
+    if (!shouldShow) return;
+
+    setShowThankYou(true);
+    setShowWelcome(false);
+
+    introTimerRef.current = window.setTimeout(() => {
+      try {
+        sessionStorage.setItem('oc_thankyou_shown', '1');
+        sessionStorage.removeItem('oc_show_thankyou');
+      } catch {
+        // ignore
+      }
+      setShowThankYou(false);
+      setShowWelcome(true);
+      introTimerRef.current = null;
+    }, 3000);
+
+    return () => {
+      if (introTimerRef.current) {
+        window.clearTimeout(introTimerRef.current);
+        introTimerRef.current = null;
+      }
+    };
+  }, []);
+
+  const fetchEncuesta = useCallback(async () => {
     try {
       const response = await apiRequest('/api/encuestas', {
         method: 'GET',
@@ -282,7 +335,33 @@ export default function EncuestaPage() {
       // 3. LÓGICA DE FALLBACK: Si hay datos, úsalos. Si no, usa el Mock.
       if (response.ok && data.data && Array.isArray(data.data) && data.data.length > 0) {
         console.log("Cargando encuesta desde base de datos...");
-        setQuestionsList(data.data);
+        const normalized = (data.data as Array<Record<string, unknown>>)
+          .map((q) => {
+            const id = (q.id ?? q.codigo ?? q.db_id) as string | number | undefined;
+            const pregunta = q.pregunta as string | undefined;
+            const tipo = q.tipo as Question['tipo'] | undefined;
+            const opciones = q.opciones as string[] | undefined;
+            const requeridaRaw = q.requerida ?? q.obligatoria;
+            const requerida = typeof requeridaRaw === 'boolean' ? requeridaRaw : true;
+
+            return {
+              id: id ?? '',
+              pregunta: pregunta ?? '',
+              tipo: tipo ?? 'text',
+              opciones,
+              requerida,
+            } satisfies Question;
+          })
+          .filter((q) => Boolean(q.id) && Boolean(q.pregunta) && Boolean(q.tipo));
+
+        const hasTipos = normalized.every((q) => typeof q.tipo === 'string' && q.tipo.length > 0);
+
+        if (normalized.length > 0 && hasTipos) {
+          setQuestionsList(normalized);
+        } else {
+          console.warn('Encuesta en DB incompleta (faltan campos). Usando MOCK DATA.');
+          setQuestionsList(MOCK_QUESTIONS);
+        }
       } else {
         console.warn("No se encontraron encuestas en DB o formato incorrecto. Usando MOCK DATA.");
         setQuestionsList(MOCK_QUESTIONS);
@@ -292,14 +371,38 @@ export default function EncuestaPage() {
       // En caso de error de red, también usamos el Mock
       setQuestionsList(MOCK_QUESTIONS);
     }
-  };
+  }, [router]);
+
+  const checkAuthAndFetch = useCallback(async () => {
+    try {
+      const userData = await checkAuth();
+
+      if (!userData) {
+        router.push('/');
+        return;
+      }
+
+      await fetchEncuesta();
+      await fetchProgresoAndRestore();
+    } catch (error) {
+      console.error('Error:', error);
+      router.push('/');
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchEncuesta, fetchProgresoAndRestore, router]);
+
+  useEffect(() => {
+    void checkAuthAndFetch();
+  }, [checkAuthAndFetch]);
 
   const handleLogout = async () => {
     setLoadingLogout(true);
     try {
       await authLogout();
     } catch (error) {
-      console.error('Error:', error);
+      // Logout is best-effort; ignore errors and redirect anyway.
+      console.warn('Logout failed (ignored):', error);
     } finally {
       router.push('/');
     }
@@ -325,7 +428,7 @@ export default function EncuestaPage() {
     }
   };
 
-  const handleAnswerChange = (questionId: string | number, value: any) => {
+  const handleAnswerChange = (questionId: string | number, value: AnswerValue) => {
     const newAnswers = {
       ...answers,
       [String(questionId)]: value,
@@ -345,6 +448,8 @@ export default function EncuestaPage() {
       });
 
       if (response.ok) {
+        // Marcar progreso como completado en la DB (evita depender de cookies/local state)
+        await saveImmediately(answers, 'completada');
         setSubmitted(true);
         setAnswers({});
       }
@@ -360,28 +465,36 @@ export default function EncuestaPage() {
 
     switch (question.tipo) {
       case 'textarea':
+        {
+        const textValue = typeof value === 'string' ? value : '';
         return (
           <textarea
-            value={value || ''}
+            value={textValue}
             onChange={(e) => handleAnswerChange(question.id, e.target.value)}
             rows={5}
             className="w-full px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base text-black bg-blue-50 border-2 border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder:text-gray-400"
             placeholder="Escribe tu respuesta aquí..."
           />
         );
+        }
 
       case 'text':
+        {
+        const textValue = typeof value === 'string' ? value : '';
         return (
           <input
             type="text"
-            value={value || ''}
+            value={textValue}
             onChange={(e) => handleAnswerChange(question.id, e.target.value)}
             className="w-full px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-3.5 md:px-5 md:py-4 text-sm sm:text-base text-black bg-blue-50 border-2 border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-gray-400"
             placeholder="Escribe tu respuesta..."
           />
         );
+        }
 
       case 'select':
+        {
+        const selectedValue = typeof value === 'string' ? value : '';
         const isOpen = dropdownOpen[String(question.id)] || false;
         return (
           <div className="relative">
@@ -389,10 +502,10 @@ export default function EncuestaPage() {
               type="button"
               onClick={() => setDropdownOpen({ ...dropdownOpen, [String(question.id)]: !isOpen })}
               className={`w-full px-4 py-3.5 max-h-[600px]:px-3 max-h-[600px]:py-3 sm:px-5 sm:py-4 md:px-5 md:py-4 text-sm sm:text-base text-left bg-blue-50 border-2 border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center justify-between ${
-                value ? 'text-black' : 'text-gray-500'
+                selectedValue ? 'text-black' : 'text-gray-500'
               }`}
             >
-              <span className="truncate pr-2">{value || 'Selecciona una opción...'}</span>
+              <span className="truncate pr-2">{selectedValue || 'Selecciona una opción...'}</span>
               <svg
                 className={`w-5 h-5 sm:w-5 sm:h-5 text-gray-500 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
                 fill="none"
@@ -419,7 +532,7 @@ export default function EncuestaPage() {
                         setDropdownOpen({ ...dropdownOpen, [String(question.id)]: false });
                       }}
                       className={`w-full px-4 py-3.5 sm:px-5 sm:py-4 text-left text-sm sm:text-base hover:bg-blue-50 active:bg-blue-100 transition-colors ${
-                        value === opcion ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700'
+                        selectedValue === opcion ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700'
                       }`}
                     >
                       {opcion}
@@ -430,12 +543,15 @@ export default function EncuestaPage() {
             )}
           </div>
         );
+        }
 
       case 'radio':
+        {
+        const selectedValue = typeof value === 'string' ? value : '';
         return (
           <div className="space-y-3 sm:space-y-4 md:space-y-4">
             {question.opciones?.map((opcion) => {
-              const isSelected = value === opcion;
+              const isSelected = selectedValue === opcion;
               return (
                 <label
                   key={opcion}
@@ -470,9 +586,11 @@ export default function EncuestaPage() {
             })}
           </div>
         );
+        }
 
       case 'multiple_choice':
-        const selectedValues = value || [];
+        {
+        const selectedValues = Array.isArray(value) ? value : [];
         return (
           <div className="space-y-3 sm:space-y-4 md:space-y-4">
             {question.opciones?.map((opcion) => {
@@ -494,7 +612,7 @@ export default function EncuestaPage() {
                       if (e.target.checked) {
                         handleAnswerChange(question.id, [...selectedValues, opcion]);
                       } else {
-                        handleAnswerChange(question.id, selectedValues.filter((v: string) => v !== opcion));
+                        handleAnswerChange(question.id, selectedValues.filter((v) => v !== opcion));
                       }
                     }}
                     className="sr-only"
@@ -516,6 +634,7 @@ export default function EncuestaPage() {
             })}
           </div>
         );
+        }
 
       default:
         return null;
@@ -524,15 +643,18 @@ export default function EncuestaPage() {
 
   if (loading || questionsList.length === 0) {
     return (
-      <div>
-         <LoadingSpinner message={loading ? "Verificando sesión..." : "Cargando encuesta..."} />
+      <div className="min-h-screen bg-white">
+        <ThankYouCover isOpen={showThankYou} />
+        <WelcomeModal isOpen={showWelcome && !showThankYou} onClose={() => setShowWelcome(false)} />
+        <LoadingSpinner message={loading ? "Verificando sesión..." : "Cargando encuesta..."} />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <WelcomeModal isOpen={showWelcome} onClose={() => setShowWelcome(false)} />
+      <ThankYouCover isOpen={showThankYou} />
+      <WelcomeModal isOpen={showWelcome && !showThankYou} onClose={() => setShowWelcome(false)} />
       {/* Header */}
       <div className="flex justify-between items-center px-4 py-3 max-h-[600px]:px-3 max-h-[600px]:py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5 bg-white border-b border-gray-200">
         <div className="flex items-center gap-2">

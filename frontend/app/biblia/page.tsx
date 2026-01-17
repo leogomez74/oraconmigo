@@ -32,38 +32,37 @@ export default function BiblePage() {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    const run = async () => {
+      try {
+        const userData = await authCheck();
 
-  const checkAuth = async () => {
-    try {
-      const userData = await authCheck();
+        if (!userData) {
+          router.push('/');
+          return;
+        }
 
-      if (!userData) {
+        setAuthLoading(false);
+
+        setLoading(true);
+        try {
+          const res = await fetch('https://bible-api.deno.dev/api/books');
+          const data = await res.json();
+          setBooks(data);
+        } catch (error) {
+          console.error('Error fetching books:', error);
+        } finally {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error:', error);
         router.push('/');
-        return;
       }
+    };
 
-      setAuthLoading(false);
-      fetchBooks();
-    } catch (error) {
-      console.error('Error:', error);
-      router.push('/');
-    }
-  };
+    void run();
+  }, [router]);
 
-  const fetchBooks = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('https://bible-api.deno.dev/api/books');
-      const data = await res.json();
-      setBooks(data);
-    } catch (error) {
-      console.error('Error fetching books:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const registerReading = async (book: Book, chapter: number) => {
     try {

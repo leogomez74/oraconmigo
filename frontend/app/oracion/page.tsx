@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth as authCheck, apiRequest, getCsrfCookie } from '@/lib/auth';
 import PremiumBanner from '@/components/PremiumBanner';
@@ -27,29 +27,7 @@ export default function OracionesPage() {
   const [loading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const userData = await authCheck();
-
-      if (!userData) {
-        router.push('/');
-        return;
-      }
-
-      setAuthLoading(false);
-      fetchCategorias();
-      fetchOraciones();
-    } catch (error) {
-      console.error('Error:', error);
-      router.push('/');
-    }
-  };
-
-  const fetchCategorias = async () => {
+  const fetchCategorias = useCallback(async () => {
     try {
       await getCsrfCookie();
       const response = await apiRequest('/api/oraciones/categorias', {
@@ -62,9 +40,9 @@ export default function OracionesPage() {
     } catch (error) {
       console.error('Error fetching categorias:', error);
     }
-  };
+  }, []);
 
-  const fetchOraciones = async (categoria?: string) => {
+  const fetchOraciones = useCallback(async (categoria?: string) => {
     setLoading(true);
     try {
       await getCsrfCookie();
@@ -85,7 +63,29 @@ export default function OracionesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const userData = await authCheck();
+
+      if (!userData) {
+        router.push('/');
+        return;
+      }
+
+      setAuthLoading(false);
+      void fetchCategorias();
+      void fetchOraciones();
+    } catch (error) {
+      console.error('Error:', error);
+      router.push('/');
+    }
+  }, [fetchCategorias, fetchOraciones, router]);
+
+  useEffect(() => {
+    void checkAuth();
+  }, [checkAuth]);
 
   const handleCategoriaChange = (categoria: string) => {
     setCategoriaSeleccionada(categoria);

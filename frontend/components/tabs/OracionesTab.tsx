@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { apiRequest, getCsrfCookie } from '@/lib/auth';
 import PremiumBanner from '@/components/PremiumBanner';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import UpgradeModal from '@/components/UpgradeModal';
 
 interface Oracion {
@@ -39,7 +38,6 @@ export default function OracionesTab({ onBack }: OracionesTabProps) {
   const [loadingList, setLoadingList] = useState(false);
 
   // Detail State
-  const [selectedOracionId, setSelectedOracionId] = useState<number | null>(null);
   const [oracionDetail, setOracionDetail] = useState<OracionDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [completando, setCompletando] = useState(false);
@@ -105,7 +103,6 @@ export default function OracionesTab({ onBack }: OracionesTabProps) {
   };
 
   const handleOracionClick = (id: number) => {
-    setSelectedOracionId(id);
     fetchOracionDetail(id);
     setView('detail');
   };
@@ -181,7 +178,6 @@ export default function OracionesTab({ onBack }: OracionesTabProps) {
     if (view === 'detail') {
       setView('list');
       setOracionDetail(null);
-      setSelectedOracionId(null);
     } else {
       onBack();
     }

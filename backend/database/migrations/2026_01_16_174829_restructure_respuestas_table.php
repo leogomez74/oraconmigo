@@ -16,22 +16,18 @@ return new class extends Migration
 
         Schema::create('respuestas', function (Blueprint $table) {
             $table->id();
-            $table->string('people_id');
+            $table->foreignId('people_id')->constrained('people')->onDelete('cascade');
             $table->string('pregunta');
             $table->text('respuesta')->nullable(); // null si es respuesta múltiple
             $table->timestamps();
-
-            $table->foreign('people_id')->references('telefono')->on('people')->onDelete('cascade');
         });
 
         Schema::create('respuesta_multiples', function (Blueprint $table) {
             $table->id();
             $table->foreignId('respuesta_id')->constrained('respuestas')->onDelete('cascade');
-            $table->string('people_id');
+            $table->foreignId('people_id')->constrained('people')->onDelete('cascade');
             $table->text('opcion');
             $table->timestamps();
-
-            $table->foreign('people_id')->references('telefono')->on('people')->onDelete('cascade');
         });
     }
 

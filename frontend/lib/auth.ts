@@ -34,6 +34,19 @@ export function resetCsrfCache() {
   csrfCookieCached = false;
 }
 
+function isApiErrorLike(error: unknown): error is { status?: number; errors?: unknown; message?: string } {
+  return typeof error === 'object' && error !== null && ('status' in error || 'errors' in error);
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  try {
+    return typeof error === 'string' ? error : JSON.stringify(error);
+  } catch {
+    return String(error);
+  }
+}
+
 /**
  * Get CSRF token from cookie
  */
@@ -92,6 +105,7 @@ export async function register(data: {
   apellido: string;
   email: string;
   pais: string;
+  whatsapp?: string;
   telefono?: string;
 }) {
   try {
@@ -116,9 +130,9 @@ export async function register(data: {
     }
 
     return responseData;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // If it's already our formatted error, re-throw it
-    if (error.status || error.errors) {
+    if (isApiErrorLike(error)) {
       throw error;
     }
 
@@ -127,7 +141,7 @@ export async function register(data: {
       status: 0,
       message: 'Error de conexión. Por favor, verifica que el servidor esté en ejecución.',
       errors: {},
-      originalError: error.message,
+      originalError: getErrorMessage(error),
     };
   }
 }
@@ -160,8 +174,8 @@ export async function login(credentials: {
     }
 
     return responseData;
-  } catch (error: any) {
-    if (error.status || error.errors) {
+  } catch (error: unknown) {
+    if (isApiErrorLike(error)) {
       throw error;
     }
 
@@ -169,7 +183,7 @@ export async function login(credentials: {
       status: 0,
       message: 'Error de conexión. Por favor, verifica que el servidor esté en ejecución.',
       errors: {},
-      originalError: error.message,
+      originalError: getErrorMessage(error),
     };
   }
 }
@@ -199,8 +213,8 @@ export async function sendOtp(email: string) {
     }
 
     return responseData;
-  } catch (error: any) {
-    if (error.status || error.errors) {
+  } catch (error: unknown) {
+    if (isApiErrorLike(error)) {
       throw error;
     }
 
@@ -208,7 +222,7 @@ export async function sendOtp(email: string) {
       status: 0,
       message: 'Error de conexión',
       errors: {},
-      originalError: error.message,
+      originalError: getErrorMessage(error),
     };
   }
 }
@@ -238,8 +252,8 @@ export async function verifyOtp(email: string, code: string) {
     }
 
     return responseData;
-  } catch (error: any) {
-    if (error.status || error.errors) {
+  } catch (error: unknown) {
+    if (isApiErrorLike(error)) {
       throw error;
     }
 
@@ -247,7 +261,7 @@ export async function verifyOtp(email: string, code: string) {
       status: 0,
       message: 'Error de conexión',
       errors: {},
-      originalError: error.message,
+      originalError: getErrorMessage(error),
     };
   }
 }
@@ -261,22 +275,30 @@ export async function logout() {
       method: 'POST',
     });
 
-    const responseData = await response.json();
+    // Logout may return 204 No Content or non-JSON responses depending on backend.
+    let responseData: unknown = null;
+    try {
+      responseData = await response.json();
+    } catch {
+      responseData = null;
+    }
 
     if (!response.ok) {
+      const dataObj = (typeof responseData === 'object' && responseData !== null)
+        ? (responseData as Record<string, unknown>)
+        : {};
+
       throw {
         status: response.status,
-        message: responseData.message || 'Error al cerrar sesión',
-        errors: responseData.errors || {},
-        ...responseData,
+        message: (dataObj.message as string) || 'Error al cerrar sesión',
+        errors: (dataObj.errors as unknown) || {},
+        ...dataObj,
       };
     }
 
-    resetCsrfCache();
-
     return responseData;
-  } catch (error: any) {
-    if (error.status || error.errors) {
+  } catch (error: unknown) {
+    if (isApiErrorLike(error)) {
       throw error;
     }
 
@@ -284,8 +306,11 @@ export async function logout() {
       status: 0,
       message: 'Error de conexión',
       errors: {},
-      originalError: error.message,
+      originalError: getErrorMessage(error),
     };
+  } finally {
+    // Even if the request fails, we still want the client to consider the session cleared.
+    resetCsrfCache();
   }
 }
 
@@ -310,8 +335,8 @@ export async function getCurrentUser() {
     }
 
     return responseData.data;
-  } catch (error: any) {
-    if (error.status || error.errors) {
+  } catch (error: unknown) {
+    if (isApiErrorLike(error)) {
       throw error;
     }
 
@@ -319,7 +344,7 @@ export async function getCurrentUser() {
       status: 0,
       message: 'Error de conexión',
       errors: {},
-      originalError: error.message,
+      originalError: getErrorMessage(error),
     };
   }
 }
@@ -332,7 +357,7 @@ export async function checkAuth() {
   try {
     const data = await getCurrentUser();
     return data;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

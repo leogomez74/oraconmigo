@@ -12,20 +12,58 @@ class EncuestaController extends Controller
 {
     // Constantes para la encuesta
     const TOTAL_PASOS = 21;
+
+    private function getEncuestaTotalPasos(): int
+    {
+        $count = Encuesta::count();
+
+        return $count > 0 ? $count : self::TOTAL_PASOS;
+    }
+
     public function index(Request $request)
     {
-        $encuestas = Encuesta::all();
+        $query = Encuesta::query();
+
+        // Si ya tenemos preguntas con codigo, preferimos solo esas (evita duplicados legacy)
+        if (Encuesta::whereNotNull('codigo')->exists()) {
+            $query->whereNotNull('codigo');
+        }
+
+        $encuestas = $query->orderBy('id')->get();
+
+        $data = $encuestas->map(function (Encuesta $encuesta) {
+            $stableId = $encuesta->codigo ?: (string) $encuesta->id;
+
+            return [
+                // Mantener un id estable (string) para respuestas/analytics
+                'id' => $stableId,
+                // Exponer id numérico por si alguien lo necesita
+                'db_id' => $encuesta->id,
+                'codigo' => $encuesta->codigo,
+                'pregunta' => $encuesta->pregunta,
+                'tipo' => $encuesta->tipo,
+                'opciones' => $encuesta->opciones,
+                // Compat frontend
+                'requerida' => (bool) $encuesta->obligatoria,
+                // Mantener nombre backend
+                'obligatoria' => (bool) $encuesta->obligatoria,
+            ];
+        });
 
         return response()->json([
             'success' => true,
-            'data' => $encuestas
+            'data' => $data,
         ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'codigo' => 'nullable|string|max:255',
             'pregunta' => 'required|string',
+            'tipo' => 'nullable|string|max:255',
+            'opciones' => 'nullable|array',
+            'obligatoria' => 'nullable|boolean',
         ]);
 
         $encuesta = Encuesta::create($validated);
@@ -47,9 +85,10 @@ class EncuestaController extends Controller
     public function guardarProgreso(Request $request)
     {
         try {
+            $totalPasos = $this->getEncuestaTotalPasos();
             $validated = $request->validate([
-                'paso_actual' => 'required|integer|min:1|max:' . self::TOTAL_PASOS,
-                'ultimo_paso_completado' => 'required|integer|min:0|max:' . self::TOTAL_PASOS,
+                'paso_actual' => 'required|integer|min:1|max:' . $totalPasos,
+                'ultimo_paso_completado' => 'required|integer|min:0|max:' . $totalPasos,
                 'ultima_pregunta_vista' => 'required|string',
                 'respuestas_parciales' => 'required|array',
                 'estado' => 'required|string|in:sin_iniciar,en_progreso,completada,abandonada',
@@ -68,6 +107,7 @@ class EncuestaController extends Controller
                     'preguntas_respondidas' => $preguntasRespondidas,
                     'respuestas_parciales' => $validated['respuestas_parciales'],
                     'estado' => $validated['estado'],
+                    'completada' => $validated['estado'] === 'completada',
                     'ultima_interaccion_at' => now(),
                 ]
             );
@@ -127,6 +167,7 @@ class EncuestaController extends Controller
     public function marcarCompletada(Request $request)
     {
         try {
+            $totalPasos = $this->getEncuestaTotalPasos();
             $progreso = EncuestaProgreso::where('people_id', $request->user()->id)->first();
 
             if (!$progreso) {
@@ -139,7 +180,7 @@ class EncuestaController extends Controller
             $progreso->update([
                 'estado' => 'completada',
                 'completada' => true,
-                'ultimo_paso_completado' => self::TOTAL_PASOS,
+                'ultimo_paso_completado' => $totalPasos,
                 'ultima_interaccion_at' => now(),
             ]);
 

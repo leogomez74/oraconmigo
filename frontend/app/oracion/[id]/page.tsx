@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { checkAuth as authCheck, apiRequest, getCsrfCookie } from '@/lib/auth';
 import UpgradeModal from '@/components/UpgradeModal';
@@ -35,28 +35,7 @@ export default function OracionDetailPage() {
   // TODO: Obtener del backend cuando se implemente el campo is_premium
   const isPremiumUser = false;
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const userData = await authCheck();
-
-      if (!userData) {
-        router.push('/');
-        return;
-      }
-
-      setAuthLoading(false);
-      fetchOracion();
-    } catch (error) {
-      console.error('Error:', error);
-      router.push('/');
-    }
-  };
-
-  const fetchOracion = async () => {
+  const fetchOracion = useCallback(async () => {
     setLoading(true);
     try {
       await getCsrfCookie();
@@ -73,7 +52,28 @@ export default function OracionDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const userData = await authCheck();
+
+      if (!userData) {
+        router.push('/');
+        return;
+      }
+
+      setAuthLoading(false);
+      void fetchOracion();
+    } catch (error) {
+      console.error('Error:', error);
+      router.push('/');
+    }
+  }, [fetchOracion, router]);
+
+  useEffect(() => {
+    void checkAuth();
+  }, [checkAuth]);
 
   const handleCompletar = async () => {
     if (!oracion) return;

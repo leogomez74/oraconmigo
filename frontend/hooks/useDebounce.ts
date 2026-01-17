@@ -1,8 +1,8 @@
 // hooks/useDebounce.ts
 import { useEffect, useRef, useCallback } from 'react';
 
-export function useDebouncedCallback<T extends (...args: any[]) => any>(
-  callback: T,
+export function useDebouncedCallback<TArgs extends unknown[]>(
+  callback: (...args: TArgs) => void,
   delay: number = 3000
 ) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -19,7 +19,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   }, []);
 
   const debouncedCallback = useCallback(
-    (...args: Parameters<T>) => {
+    (...args: TArgs) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         callbackRef.current(...args);

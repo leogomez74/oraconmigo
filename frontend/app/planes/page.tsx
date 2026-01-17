@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkAuth as authCheck } from '@/lib/auth';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -10,11 +10,7 @@ export default function PlanesPage() {
   const [authLoading, setAuthLoading] = useState(true);
   const [planSeleccionado, setPlanSeleccionado] = useState<'mensual' | 'anual'>('mensual');
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const userData = await authCheck();
 
@@ -28,7 +24,15 @@ export default function PlanesPage() {
       console.error('Error:', error);
       router.push('/');
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      void checkAuth();
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, [checkAuth]);
 
   const handlePlanSelect = (plan: 'mensual' | 'anual') => {
     setPlanSeleccionado(plan);

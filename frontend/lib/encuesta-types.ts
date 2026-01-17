@@ -12,7 +12,7 @@ export interface EncuestaProgreso {
   ultimo_paso_completado: number; // 0-4
   ultima_pregunta_vista: PreguntaId | null;
   preguntas_respondidas: PreguntaId[];
-  respuestas_parciales: Record<string, any>;
+  respuestas_parciales: Record<string, unknown>;
   estado: EstadoEncuesta;
   completada: boolean;
   ultima_interaccion_at: string | null;
@@ -25,7 +25,7 @@ export interface GuardarProgresoPayload {
   paso_actual: number;
   ultimo_paso_completado: number;
   ultima_pregunta_vista: PreguntaId;
-  respuestas_parciales: Record<string, any>;
+  respuestas_parciales: Record<string, unknown>;
   estado: EstadoEncuesta;
 }
 

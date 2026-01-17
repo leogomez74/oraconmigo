@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('people', function (Blueprint $table) {
-            $table->string('apellido')->nullable()->change();
-            //
-        });
+        if (!Schema::hasColumn('people', 'apellido')) {
+            return;
+        }
+
+        // Avoid Doctrine DBAL dependency required by ->change()
+        DB::statement('ALTER TABLE `people` MODIFY `apellido` VARCHAR(255) NULL');
     }
 
     /**
@@ -22,9 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('people', function (Blueprint $table) {
-            $table->dropColumn('apellido');
-            //
-        });
+        if (!Schema::hasColumn('people', 'apellido')) {
+            return;
+        }
+
+        // If any rows have NULL, normalize before switching to NOT NULL
+        DB::statement("UPDATE `people` SET `apellido` = '' WHERE `apellido` IS NULL");
+        DB::statement('ALTER TABLE `people` MODIFY `apellido` VARCHAR(255) NOT NULL');
     }
 };
