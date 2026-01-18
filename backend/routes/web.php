@@ -39,12 +39,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Admin routes - Protected with admin middleware
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    })->name('home');
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/funnel', [AdminController::class, 'funnel'])->name('funnel');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::post('/users', [AdminController::class, 'store'])->name('users.store');
-    Route::put('/users/{id}', [AdminController::class, 'update'])->name('users.update');
-    Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('users.destroy');
+    Route::put('/users/{whatsapp}', [AdminController::class, 'update'])->name('users.update');
+    Route::delete('/users/{whatsapp}', [AdminController::class, 'destroy'])->name('users.destroy');
     Route::get('/content', [AdminController::class, 'content'])->name('content');
     Route::get('/encuesta-analytics', [AdminController::class, 'encuestaAnalytics'])->name('encuesta.analytics');
 });

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { router, Link, useForm } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function Users({ users, filters }) {
     const [search, setSearch] = useState(filters.search || '');
@@ -16,7 +17,9 @@ export default function Users({ users, filters }) {
         email: '',
         pais: '',
         whatsapp: '',
+        tipo: 'cliente',
         is_admin: false,
+        clave: '',
     });
 
     // Simple debounce implementation
@@ -62,7 +65,9 @@ export default function Users({ users, filters }) {
             email: user.email,
             pais: user.pais || '',
             whatsapp: user.whatsapp || '',
+            tipo: user.tipo || (user.is_admin ? 'empleado' : 'cliente'),
             is_admin: user.is_admin,
+            clave: '',
         });
         clearErrors();
         setIsModalOpen(true);
@@ -91,7 +96,7 @@ export default function Users({ users, filters }) {
                 onSuccess: () => closeModal(),
             });
         } else {
-            put(`/admin/users/${selectedUser.id}`, {
+            put(`/admin/users/${encodeURIComponent(selectedUser.whatsapp)}`, {
                 onSuccess: () => closeModal(),
             });
         }
@@ -99,7 +104,7 @@ export default function Users({ users, filters }) {
 
     const handleDelete = () => {
         if (userToDelete) {
-            destroy(`/admin/users/${userToDelete.id}`, {
+            destroy(`/admin/users/${encodeURIComponent(userToDelete.whatsapp)}`, {
                 onSuccess: () => {
                     closeDeleteModal();
                     router.reload({ only: ['users'] });
@@ -109,33 +114,8 @@ export default function Users({ users, filters }) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Header */}
-            <div className="bg-white shadow">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                             <a href="/admin/dashboard" className="text-gray-400 hover:text-gray-600">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                </svg>
-                            </a>
-                            <h1 className="text-2xl font-bold text-gray-900">Gestión de Usuarios</h1>
-                        </div>
-                        <div className="flex gap-4">
-                            <a href="/admin/dashboard" className="text-sm text-indigo-600 hover:text-indigo-800">
-                                Dashboard
-                            </a>
-                            <a href="/admin/funnel" className="text-sm text-indigo-600 hover:text-indigo-800">
-                                Funnel
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <AdminLayout title="Usuarios">
+            <div className="max-w-7xl mx-auto">
                 
                 {/* Filters & Search & Create Button */}
                 <div className="bg-white rounded-lg shadow p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -172,6 +152,18 @@ export default function Users({ users, filters }) {
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filters.filter === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`}
                             >
                                 Admins
+                            </Link>
+                            <Link 
+                                href="/admin/users?filter=empleado"
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filters.filter === 'empleado' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                            >
+                                Empleados
+                            </Link>
+                            <Link 
+                                href="/admin/users?filter=cliente"
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filters.filter === 'cliente' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                            >
+                                Clientes
                             </Link>
                         </div>
                         
@@ -211,7 +203,7 @@ export default function Users({ users, filters }) {
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {users.data.length > 0 ? (
                                     users.data.map((user) => (
-                                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                                        <tr key={user.whatsapp} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg">
@@ -227,15 +219,22 @@ export default function Users({ users, filters }) {
                                                 <div className="text-sm text-gray-900">{user.pais || 'N/A'}</div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                {user.is_admin ? (
-                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                                        Admin
-                                                    </span>
-                                                ) : (
-                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Usuario
-                                                    </span>
-                                                )}
+                                                <div className="flex flex-wrap gap-2">
+                                                    {user.tipo === 'empleado' ? (
+                                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                            Empleado
+                                                        </span>
+                                                    ) : (
+                                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                            Cliente
+                                                        </span>
+                                                    )}
+                                                    {user.is_admin ? (
+                                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                            Admin
+                                                        </span>
+                                                    ) : null}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {new Date(user.created_at).toLocaleDateString()}
@@ -373,9 +372,25 @@ export default function Users({ users, filters }) {
                             id="whatsapp"
                             value={data.whatsapp}
                             onChange={e => setData('whatsapp', e.target.value)}
+                            disabled={modalMode === 'edit'}
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                         {errors.whatsapp && <p className="mt-1 text-sm text-red-600">{errors.whatsapp}</p>}
+                    </div>
+
+                    <div>
+                        <label htmlFor="tipo" className="block text-sm font-medium text-gray-700">Tipo</label>
+                        <select
+                            id="tipo"
+                            name="tipo"
+                            value={data.tipo}
+                            onChange={e => setData('tipo', e.target.value)}
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                            <option value="cliente">Cliente</option>
+                            <option value="empleado">Empleado</option>
+                        </select>
+                        {errors.tipo && <p className="mt-1 text-sm text-red-600">{errors.tipo}</p>}
                     </div>
 
                     <div className="flex items-center">
@@ -390,6 +405,23 @@ export default function Users({ users, filters }) {
                         <label htmlFor="is_admin" className="ml-2 block text-sm text-gray-900">
                             Es Administrador
                         </label>
+                    </div>
+
+                    <div>
+                        <label htmlFor="clave" className="block text-sm font-medium text-gray-700">
+                            Clave (opcional)
+                        </label>
+                        <input
+                            type="password"
+                            name="clave"
+                            id="clave"
+                            value={data.clave}
+                            onChange={e => setData('clave', e.target.value)}
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder={modalMode === 'edit' ? 'Dejar vacío para no cambiar' : 'Mínimo 6 caracteres'}
+                            autoComplete="new-password"
+                        />
+                        {errors.clave && <p className="mt-1 text-sm text-red-600">{errors.clave}</p>}
                     </div>
                 </div>
             </Modal>
@@ -425,6 +457,6 @@ export default function Users({ users, filters }) {
                     </p>
                 </div>
             </Modal>
-        </div>
+        </AdminLayout>
     );
 }

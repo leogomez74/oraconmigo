@@ -10,6 +10,8 @@ use App\Models\People;
 use App\Models\Respuesta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -20,7 +22,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Métricas básicas
-        $totalUsers = People::all()->count();
+        $totalUsers = People::count();
         $todayUsers = People::whereDate('created_at', '=', today())->count();
         $weekUsers = People::where('created_at', '>=', now()->subWeek())->count();
         $monthUsers = People::where('created_at', '>=', now()->subMonth())->count();
@@ -29,13 +31,13 @@ class AdminController extends Controller
         $activeUsers = People::whereHas('respuestas')->distinct()->count();
 
         // Encuestas completadas
-        $completedSurveys = Respuesta::distinct()->count('people_id');
+        $completedSurveys = Respuesta::count();
 
         // Usuarios que han leído la Biblia (al menos 1 capítulo)
         $bibleReaders = BibleReading::distinct()->count('people_id');
 
         // Lecturas de Biblia totales
-        $totalBibleReadings = BibleReading::all()->count();
+        $totalBibleReadings = BibleReading::count();
 
         // Lecturas de Biblia esta semana
         $weekBibleReadings = BibleReading::where('created_at', '>=', now()->subWeek())->count();
@@ -125,10 +127,10 @@ class AdminController extends Controller
     public function funnel()
     {
         // Paso 1: Usuarios registrados
-        $registered = People::all()->count();
+        $registered = People::count();
 
         // Paso 2: Usuarios que completaron la encuesta
-        $completedSurvey = Respuesta::distinct()->count('people_id');
+        $completedSurvey = Respuesta::count();
 
         // Paso 3: Usuarios que completaron al menos una oración
         $completedPrayer = OracionUsuario::whereNotNull('completada_at')
@@ -192,6 +194,10 @@ class AdminController extends Controller
             $filter = $request->input('filter');
             if ($filter === 'admin') {
                 $query->where('is_admin', true);
+            } elseif ($filter === 'empleado') {
+                $query->where('tipo', 'empleado');
+            } elseif ($filter === 'cliente') {
+                $query->where('tipo', 'cliente');
             } elseif ($filter === 'premium') {
                 // TODO: Filtrar por usuarios premium cuando se implemente
             } elseif ($filter === 'active') {
@@ -216,11 +222,17 @@ class AdminController extends Controller
             'nombre' => 'required|string|max:255',
             'email' => 'required|email|unique:people,email',
             'pais' => 'nullable|string|max:255',
-            'whatsapp' => 'nullable|string|max:20',
+            'whatsapp' => 'required|string|max:255|unique:people,whatsapp',
+            'tipo' => 'required|in:cliente,empleado',
             'is_admin' => 'boolean',
+            'clave' => 'nullable|string|min:6',
         ]);
 
-        People::create($validated);
+        $person = People::create(collect($validated)->except(['clave'])->all());
+        if (!empty($validated['clave'])) {
+            $person->clave_hash = Hash::make($validated['clave']);
+            $person->save();
+        }
 
         return redirect()->back()->with('success', 'Usuario creado correctamente.');
     }
@@ -228,19 +240,28 @@ class AdminController extends Controller
     /**
      * Actualiza un usuario existente
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $whatsapp)
     {
-        $user = People::findOrFail($id);
+        $user = People::findOrFail($whatsapp);
 
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
-            'email' => 'required|email|unique:people,email,' . $id,
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('people', 'email')->ignore($user->getKey(), $user->getKeyName()),
+            ],
             'pais' => 'nullable|string|max:255',
-            'whatsapp' => 'nullable|string|max:20',
+            'tipo' => 'required|in:cliente,empleado',
             'is_admin' => 'boolean',
+            'clave' => 'nullable|string|min:6',
         ]);
 
-        $user->update($validated);
+        $user->update(collect($validated)->except(['clave'])->all());
+        if (array_key_exists('clave', $validated) && !empty($validated['clave'])) {
+            $user->clave_hash = Hash::make($validated['clave']);
+            $user->save();
+        }
 
         return redirect()->back()->with('success', 'Usuario actualizado correctamente.');
     }
@@ -248,10 +269,10 @@ class AdminController extends Controller
     /**
      * Elimina un usuario
      */
-    public function destroy($id)
+    public function destroy($whatsapp)
     {
-        $user = People::findOrFail($id);
-        $user->delete($id);
+        $user = People::findOrFail($whatsapp);
+        $user->delete();
 
         return redirect()->back()->with('success', 'Usuario eliminado correctamente.');
     }

@@ -1,31 +1,9 @@
+import AdminLayout from '@/Layouts/AdminLayout';
+
 export default function Funnel({ funnel }) {
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Header */}
-            <div className="bg-white shadow">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex justify-between items-center">
-                        <h1 className="text-2xl font-bold text-gray-900">Funnel de Conversión</h1>
-                        <div className="flex gap-4">
-                            <a
-                                href="/admin/dashboard"
-                                className="text-sm text-indigo-600 hover:text-indigo-800"
-                            >
-                                Dashboard
-                            </a>
-                            <a
-                                href="/admin/users"
-                                className="text-sm text-indigo-600 hover:text-indigo-800"
-                            >
-                                Usuarios
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <AdminLayout title="Funnel">
+            <div className="max-w-4xl mx-auto space-y-8">
                 <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-6">
                         Embudo de Conversión de Usuarios
@@ -184,6 +162,6 @@ export default function Funnel({ funnel }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </AdminLayout>
     );
 }

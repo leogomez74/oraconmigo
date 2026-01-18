@@ -25,6 +25,7 @@ class People extends Authenticatable
         'apellido',
         'email',
         'pais',
+        'tipo',
         'estado_civil',
         'hijos',
         'genero',
@@ -34,6 +35,7 @@ class People extends Authenticatable
 
     protected $hidden = [
         'remember_token',
+        'clave_hash',
     ];
 
     protected function casts(): array

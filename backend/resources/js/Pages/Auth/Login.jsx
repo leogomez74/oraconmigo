@@ -3,6 +3,7 @@ import { Head, useForm } from '@inertiajs/react';
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
         email: 'admin@ORA.app',
+        clave: '',
     });
 
     const handleLogin = (e) => {
@@ -60,6 +61,28 @@ export default function Login() {
                         )}
                     </div>
 
+                    <div className="mb-6">
+                        <label htmlFor="clave" className="block text-sm font-medium text-gray-700 mb-2">
+                            Clave (si aplica)
+                        </label>
+                        <input
+                            type="password"
+                            id="clave"
+                            value={data.clave}
+                            onChange={(e) => setData('clave', e.target.value)}
+                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                                errors.clave
+                                    ? 'border-red-300 focus:ring-red-500'
+                                    : 'border-gray-300 focus:ring-indigo-500'
+                            }`}
+                            placeholder="••••••••"
+                            autoComplete="current-password"
+                        />
+                        {errors.clave && (
+                            <p className="mt-2 text-sm text-red-600">{errors.clave}</p>
+                        )}
+                    </div>
+
                     <button
                         type="submit"
                         disabled={processing}
@@ -80,7 +103,7 @@ export default function Login() {
 
                     <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                         <p className="text-sm text-blue-800">
-                            <strong>Nota:</strong> Solo usuarios con permisos de administrador pueden acceder.
+                            <strong>Nota:</strong> Si tu usuario tiene clave configurada, es obligatoria.
                         </p>
                     </div>
                 </form>

@@ -1,37 +1,9 @@
+import AdminLayout from '@/Layouts/AdminLayout';
+
 export default function Content({ oraciones, oracionesPorSemana, metrics }) {
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Header */}
-            <div className="bg-white shadow">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex justify-between items-center">
-                        <h1 className="text-2xl font-bold text-gray-900">Analytics de Contenido</h1>
-                        <div className="flex gap-4">
-                            <a
-                                href="/admin/dashboard"
-                                className="text-sm text-indigo-600 hover:text-indigo-800"
-                            >
-                                Dashboard
-                            </a>
-                            <a
-                                href="/admin/funnel"
-                                className="text-sm text-indigo-600 hover:text-indigo-800"
-                            >
-                                Ver Funnel
-                            </a>
-                            <a
-                                href="/admin/users"
-                                className="text-sm text-indigo-600 hover:text-indigo-800"
-                            >
-                                Usuarios
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <AdminLayout title="Contenido">
+            <div className="max-w-7xl mx-auto">
                 {/* Métricas principales */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="bg-white rounded-lg shadow p-6">
@@ -272,6 +244,6 @@ export default function Content({ oraciones, oracionesPorSemana, metrics }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </AdminLayout>
     );
 }
