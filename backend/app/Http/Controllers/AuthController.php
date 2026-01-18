@@ -44,8 +44,10 @@ class AuthController extends Controller
         Auth::guard('web')->logout();
 
         // Invalidar y regenerar sesión
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json([
             'success' => true,
@@ -101,7 +103,9 @@ class AuthController extends Controller
 
         // Autenticar directamente
         Auth::login($person);
-        $request->session()->regenerate();
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
 
         return redirect()->intended('/admin/dashboard');
     }

@@ -18,8 +18,6 @@ class RegistrationController extends Controller
             'whatsapp' => 'required|string|max:255|unique:people,whatsapp',
         ]);
 
-        $whatsapp = $validated['whatsapp'] ?? $validated['telefono'];
-
         $person = People::create([
             'whatsapp' => $validated['whatsapp'],
             'nombre' => $validated['nombre'],
@@ -30,7 +28,9 @@ class RegistrationController extends Controller
 
         // Auto-login after registration using session
         Auth::login($person);
-        $request->session()->regenerate();
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
 
         return response()->json([
             'success' => true,
