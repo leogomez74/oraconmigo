@@ -246,27 +246,23 @@ class AdminController extends Controller
     {
         $user = People::findOrFail($whatsapp);
 
+        $emailRules = ['required', 'email'];
+        if ($request->input('email') !== $user->email) {
+            $emailRules[] = Rule::unique('people', 'email');
+        }
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'nullable|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('people', 'email')->ignore($user->getKey(), $user->getKeyName()),
-            ],
+            'email' => $emailRules,
             'pais' => 'nullable|string|max:255',
-            'whatsapp' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('people', 'whatsapp')->ignore($user->getKey(), $user->getKeyName()),
-            ],
+            'whatsapp' => ['required', 'string', 'max:255', Rule::in([$user->whatsapp])],
             'tipo' => 'required|in:cliente,empleado',
             'is_admin' => 'boolean',
             'clave' => 'nullable|string|min:6',
         ]);
 
-        $user->update(collect($validated)->except(['clave'])->all());
+        $user->update(collect($validated)->except(['clave', 'whatsapp'])->all());
         if (array_key_exists('clave', $validated) && !empty($validated['clave'])) {
             $user->clave_hash = Hash::make($validated['clave']);
             $user->save();
