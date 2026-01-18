@@ -141,11 +141,16 @@ export default function AdminLayout({ title, children }) {
 
                 <div className="flex-1 lg:pl-64">
                     <main className="px-4 py-6 sm:px-6 lg:px-8">
-                        {title ? (
-                            <div className="mb-6">
+                        <div className="mb-6 flex items-center justify-between gap-4">
+                            {title ? (
                                 <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+                            ) : (
+                                <div />
+                            )}
+                            <div className="hidden sm:block">
+                                <LogoutButton className="!w-auto" />
                             </div>
-                        ) : null}
+                        </div>
                         {children}
                     </main>
                 </div>
