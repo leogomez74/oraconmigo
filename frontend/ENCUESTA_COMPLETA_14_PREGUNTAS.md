@@ -81,8 +81,7 @@ Se ha expandido la encuesta de **8 preguntas (4 pasos)** a **14 preguntas (7 pas
   - Trabajo y finanzas
   - Paz interior
   - Guía y dirección
-  - Gratitud
-  - Perdón
+  - Gratitud y perdón
   - Fortaleza
 - **Requerida**: ✅ Sí
 - **ID**: `temas_oracion`
@@ -118,12 +117,10 @@ Se ha expandido la encuesta de **8 preguntas (4 pasos)** a **14 preguntas (7 pas
 - **Tipo**: Radio (selección única)
 - **Opciones**:
   - 13-17
-  - 18-24
-  - 25-34
-  - 35-44
-  - 45-54
-  - 55+
-  - Prefiero no decir
+  - 18-30
+  - 31-40
+  - 41-50
+  - 50+
 - **Requerida**: ❌ No (opcional)
 - **ID**: `grupo_edad`
 

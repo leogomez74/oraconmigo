@@ -64,7 +64,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'temas_oracion',
     pregunta: '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
     tipo: 'multiple_choice',
-    opciones: ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Guía y dirección', 'Gratitud', 'Perdón'],
+    opciones: ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Guía y dirección', 'Gratitud y perdón'],
     requerida: true,
   },
   // Step 4
@@ -72,7 +72,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'denominacion',
     pregunta: '¿Con qué denominación cristiana te identificas?',
     tipo: 'radio',
-    opciones: ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra'],
+    opciones: ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista'],
     requerida: false,
   },
   {
@@ -109,7 +109,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'estado_civil',
     pregunta: '¿Cuál es tu estado civil?',
     tipo: 'radio',
-    opciones: ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Prefiero no decir'],
+    opciones: ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a'],
     requerida: false,
   },
   // Step 7
@@ -132,7 +132,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'grupo_edad',
     pregunta: '¿Cuál es tu grupo de edad?',
     tipo: 'radio',
-    opciones: ['13-17', '18-24', '25-34', '35-44', '45-54', '55+'],
+    opciones: ['13-17', '18-30', '31-40', '41-50', '50+'],
     requerida: false,
   },
   {

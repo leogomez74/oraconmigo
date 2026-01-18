@@ -66,7 +66,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'temas_oracion',
                 'pregunta' => '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
                 'tipo' => 'multiple_choice',
-                'opciones' => ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Guía y dirección', 'Gratitud', 'Perdón'],
+                'opciones' => ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Guía y dirección', 'Gratitud y perdón'],
                 'obligatoria' => true,
             ],
 
@@ -75,7 +75,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'denominacion',
                 'pregunta' => '¿Con qué denominación cristiana te identificas?',
                 'tipo' => 'radio',
-                'opciones' => ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra'],
+                'opciones' => ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista'],
                 'obligatoria' => false,
             ],
             [
@@ -114,7 +114,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'estado_civil',
                 'pregunta' => '¿Cuál es tu estado civil?',
                 'tipo' => 'radio',
-                'opciones' => ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Prefiero no decir'],
+                'opciones' => ['Soltero/a', 'En una relación', 'Casado/a', 'Divorciado/a', 'Viudo/a'],
                 'obligatoria' => false,
             ],
 
@@ -139,7 +139,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'grupo_edad',
                 'pregunta' => '¿Cuál es tu grupo de edad?',
                 'tipo' => 'radio',
-                'opciones' => ['13-17', '18-24', '25-34', '35-44', '45-54', '55+'],
+                'opciones' => ['13-17', '18-30', '31-40', '41-50', '50+'],
                 'obligatoria' => false,
             ],
             [

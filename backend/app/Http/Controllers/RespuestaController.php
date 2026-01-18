@@ -81,8 +81,8 @@ class RespuestaController extends Controller
                     'trabajo' => in_array('Trabajo y finanzas', $temasSeleccionados, true),
                     'paz' => false,
                     'guia' => in_array('Guía y dirección', $temasSeleccionados, true),
-                    'gratitud' => in_array('Gratitud', $temasSeleccionados, true),
-                    'perdon' => in_array('Perdón', $temasSeleccionados, true),
+                    'gratitud' => in_array('Gratitud', $temasSeleccionados, true) || in_array('Gratitud y perdón', $temasSeleccionados, true),
+                    'perdon' => in_array('Perdón', $temasSeleccionados, true) || in_array('Gratitud y perdón', $temasSeleccionados, true),
                 ]
             );
 
