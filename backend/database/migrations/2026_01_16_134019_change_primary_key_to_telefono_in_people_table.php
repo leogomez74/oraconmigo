@@ -12,14 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Primero renombrar whatsapp a whatsapp y hacerlo required
-        Schema::table('people', function (Blueprint $table) {
-            $table->renameColumn('whatsapp', 'whatsapp');
-        });
-
-        Schema::table('people', function (Blueprint $table) {
-            $table->string('whatsapp')->nullable(false)->change();
-        });
+        // 1. Asegurar que whatsapp (teléfono) sea NOT NULL
+        // Evitamos renameColumn('whatsapp','whatsapp') porque rompe.
+        // Si existen filas viejas con whatsapp NULL/vacío, asignar un valor temporal basado en id.
+        DB::statement("UPDATE people SET whatsapp = CONCAT('unknown_', id) WHERE whatsapp IS NULL OR whatsapp = ''");
+        DB::statement("ALTER TABLE people MODIFY whatsapp VARCHAR(255) NOT NULL");
 
         // 2. Agregar columna whatsapp a tablas relacionadas (para mapear)
         Schema::table('respuestas', function (Blueprint $table) {

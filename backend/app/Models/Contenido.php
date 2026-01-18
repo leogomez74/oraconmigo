@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Respuesta extends Model
+class Contenido extends Model
 {
-    protected $table = 'respuestas';
+    protected $table = 'contenido';
 
     protected $primaryKey = 'whatsapp';
     public $incrementing = false;
@@ -15,15 +15,21 @@ class Respuesta extends Model
 
     protected $fillable = [
         'whatsapp',
-        'minutosaldia',
-        'horadeorar',
-        'estresactual',
-        'experiencia',
-        'denominacion',
-        'frecuenciaiglesia',
-        'frecuenciabiblia',
-        'conocimiento',
-        'apoyos',
+        'audio',
+        'video',
+        'texto',
+        'musica',
+        'imagenes',
+        'cualquiera',
+    ];
+
+    protected $casts = [
+        'audio' => 'boolean',
+        'video' => 'boolean',
+        'texto' => 'boolean',
+        'musica' => 'boolean',
+        'imagenes' => 'boolean',
+        'cualquiera' => 'boolean',
     ];
 
     public function person(): BelongsTo

@@ -12,6 +12,15 @@ class EncuestaSeeder extends Seeder
      */
     public function run(): void
     {
+        // Eliminar preguntas removidas del flujo (17-21)
+        Encuesta::whereIn('codigo', [
+            'recordatorios',
+            'frecuencia_recordatorios',
+            'funcionalidades_deseadas',
+            'experiencia_premium',
+            'interes_donacion',
+        ])->delete();
+
         $questions = [
             // Step 1
             [
@@ -57,7 +66,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'temas_oracion',
                 'pregunta' => '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
                 'tipo' => 'multiple_choice',
-                'opciones' => ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Paz interior', 'Guía y dirección', 'Gratitud', 'Perdón', 'Fortaleza'],
+                'opciones' => ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Guía y dirección', 'Gratitud', 'Perdón'],
                 'obligatoria' => true,
             ],
 
@@ -66,7 +75,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'denominacion',
                 'pregunta' => '¿Con qué denominación cristiana te identificas?',
                 'tipo' => 'radio',
-                'opciones' => ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra', 'Prefiero no decir'],
+                'opciones' => ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra'],
                 'obligatoria' => false,
             ],
             [
@@ -130,7 +139,7 @@ class EncuestaSeeder extends Seeder
                 'codigo' => 'grupo_edad',
                 'pregunta' => '¿Cuál es tu grupo de edad?',
                 'tipo' => 'radio',
-                'opciones' => ['13-17', '18-24', '25-34', '35-44', '45-54', '55+', 'Prefiero no decir'],
+                'opciones' => ['13-17', '18-24', '25-34', '35-44', '45-54', '55+'],
                 'obligatoria' => false,
             ],
             [
@@ -138,45 +147,6 @@ class EncuestaSeeder extends Seeder
                 'pregunta' => '¿Qué formato de contenido prefieres?',
                 'tipo' => 'multiple_choice',
                 'opciones' => ['Audio guiado', 'Texto para leer', 'Video', 'Música de fondo', 'Imágenes inspiradoras', 'Cualquiera'],
-                'obligatoria' => true,
-            ],
-
-            // Step 9
-            [
-                'codigo' => 'recordatorios',
-                'pregunta' => '¿Te gustaría recibir recordatorios diarios para orar?',
-                'tipo' => 'radio',
-                'opciones' => ['Sí, activar ahora', 'Tal vez después', 'No, gracias'],
-                'obligatoria' => true,
-            ],
-            [
-                'codigo' => 'frecuencia_recordatorios',
-                'pregunta' => 'Si activas recordatorios, ¿cuántos por día prefieres?',
-                'tipo' => 'radio',
-                'opciones' => ['1 vez al día', '2 veces al día', '3 veces al día', 'Solo cuando yo decida'],
-                'obligatoria' => false,
-            ],
-
-            // Step 10
-            [
-                'codigo' => 'funcionalidades_deseadas',
-                'pregunta' => '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)',
-                'tipo' => 'multiple_choice',
-                'opciones' => ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración', 'Rastreo de progreso', 'Versículos diarios'],
-                'obligatoria' => false,
-            ],
-            [
-                'codigo' => 'experiencia_premium',
-                'pregunta' => '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?',
-                'tipo' => 'radio',
-                'opciones' => ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
-                'obligatoria' => true,
-            ],
-            [
-                'codigo' => 'interes_donacion',
-                'pregunta' => '¿Te gustaría ayudar con una donación?',
-                'tipo' => 'radio',
-                'opciones' => ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
                 'obligatoria' => true,
             ],
         ];

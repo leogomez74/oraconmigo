@@ -64,7 +64,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'temas_oracion',
     pregunta: '¿Sobre qué temas te gustaría orar? (Selecciona todos los que quieras)',
     tipo: 'multiple_choice',
-    opciones: ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Paz interior', 'Guía y dirección', 'Gratitud', 'Perdón', 'Fortaleza'],
+    opciones: ['Salud y sanación', 'Familia y relaciones', 'Trabajo y finanzas', 'Guía y dirección', 'Gratitud', 'Perdón'],
     requerida: true,
   },
   // Step 4
@@ -72,7 +72,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'denominacion',
     pregunta: '¿Con qué denominación cristiana te identificas?',
     tipo: 'radio',
-    opciones: ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra', 'Prefiero no decir'],
+    opciones: ['Católico', 'Protestante/Evangélico', 'Ortodoxo', 'Pentecostal', 'Bautista', 'Adventista', 'Otra'],
     requerida: false,
   },
   {
@@ -132,7 +132,7 @@ const MOCK_QUESTIONS: Question[] = [
     id: 'grupo_edad',
     pregunta: '¿Cuál es tu grupo de edad?',
     tipo: 'radio',
-    opciones: ['13-17', '18-24', '25-34', '35-44', '45-54', '55+', 'Prefiero no decir'],
+    opciones: ['13-17', '18-24', '25-34', '35-44', '45-54', '55+'],
     requerida: false,
   },
   {
@@ -140,43 +140,6 @@ const MOCK_QUESTIONS: Question[] = [
     pregunta: '¿Qué formato de contenido prefieres?',
     tipo: 'multiple_choice',
     opciones: ['Audio guiado', 'Texto para leer', 'Video', 'Música de fondo', 'Imágenes inspiradoras', 'Cualquiera'],
-    requerida: true,
-  },
-  // Step 9
-  {
-    id: 'recordatorios',
-    pregunta: '¿Te gustaría recibir recordatorios diarios para orar?',
-    tipo: 'radio',
-    opciones: ['Sí, activar ahora', 'Tal vez después', 'No, gracias'],
-    requerida: true,
-  },
-  {
-    id: 'frecuencia_recordatorios',
-    pregunta: 'Si activas recordatorios, ¿cuántos por día prefieres?',
-    tipo: 'radio',
-    opciones: ['1 vez al día', '2 veces al día', '3 veces al día', 'Solo cuando yo decida'],
-    requerida: false,
-  },
-  // Step 10
-  {
-    id: 'funcionalidades_deseadas',
-    pregunta: '¿Qué funcionalidades te gustaría que incluyera nuestro servicio? (Selecciona todas)',
-    tipo: 'multiple_choice',
-    opciones: ['Oraciones programadas (mañana, mediodía, noche)', 'Biblia en un año', 'Audio para dormir', 'Contenido en video', 'Reflexiones diarias', 'Comunidad de oración', 'Rastreo de progreso', 'Versículos diarios'],
-    requerida: false,
-  },
-  {
-    id: 'experiencia_premium',
-    pregunta: '¿Te interesaría una experiencia sin anuncios y con contenido exclusivo?',
-    tipo: 'radio',
-    opciones: ['Sí, me interesa', 'Tal vez', 'No, prefiero la versión gratuita'],
-    requerida: true,
-  },
-  {
-    id: 'interes_donacion',
-    pregunta: '¿Te gustaría ayudar con una donación?',
-    tipo: 'radio',
-    opciones: ['Sí, me gustaría donar', 'No, por ahora', 'Tal vez más adelante'],
     requerida: true,
   },
 ];
@@ -708,8 +671,12 @@ export default function EncuestaPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4 px-4">¡Gracias por su tiempo!</h2>
-              <p className="text-gray-600 text-sm sm:text-base px-4">Nos comunicaremos contigo pronto.</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-black mb-3 px-4">¡Dios te bendiga!</h2>
+              <p className="text-gray-700 text-sm sm:text-base px-4 mb-2">Gracias por tu tiempo.</p>
+              <p className="text-gray-600 text-sm sm:text-base px-4 mb-2">
+                Ora Conmigo AI estará disponible a partir del 1 de Junio de 2026.
+              </p>
+              <p className="text-gray-600 text-sm sm:text-base px-4">Estaremos en contacto muy pronto.</p>
             </div>
           </div>
         ) : currentStepQuestions.length > 0 ? (

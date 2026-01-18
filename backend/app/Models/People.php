@@ -25,6 +25,10 @@ class People extends Authenticatable
         'apellido',
         'email',
         'pais',
+        'estado_civil',
+        'hijos',
+        'genero',
+        'edad',
         'is_admin',
     ];
 
@@ -44,7 +48,7 @@ class People extends Authenticatable
      */
     public function respuestas()
     {
-        return $this->hasMany(Respuesta::class, 'people_id');
+        return $this->hasOne(Respuesta::class, 'whatsapp', 'whatsapp');
     }
 
     /**
