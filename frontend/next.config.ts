@@ -5,7 +5,12 @@ const nextConfig: NextConfig = {
 
   // Proxy API calls and Sanctum routes to Laravel backend
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
+    const backendUrl =
+      process.env.BACKEND_URL ||
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      (process.env.NODE_ENV === "production"
+        ? "https://backend.oraconmigo.app"
+        : "http://127.0.0.1:8000");
     return [
       {
         source: '/api/:path*',
