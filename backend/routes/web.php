@@ -43,6 +43,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return redirect()->route('admin.dashboard');
     })->name('home');
 
+    Route::post('/logout', [AuthController::class, 'adminLogout'])->name('logout');
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/funnel', [AdminController::class, 'funnel'])->name('funnel');
     Route::get('/users', [AdminController::class, 'users'])->name('users');

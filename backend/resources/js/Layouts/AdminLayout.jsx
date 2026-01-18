@@ -23,6 +23,25 @@ function NavItem({ href, label, active, onClick }) {
     );
 }
 
+function LogoutButton({ className = '', onClick }) {
+    return (
+        <Link
+            href="/admin/logout"
+            method="post"
+            as="button"
+            onClick={onClick}
+            className={classNames(
+                'w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'text-red-700 hover:bg-red-50',
+                className
+            )}
+        >
+            <span className="h-2 w-2 rounded-full bg-red-600 opacity-70" />
+            <span>Cerrar sesión</span>
+        </Link>
+    );
+}
+
 export default function AdminLayout({ title, children }) {
     const [isOpen, setIsOpen] = useState(false);
     const { url } = usePage();
@@ -91,6 +110,9 @@ export default function AdminLayout({ title, children }) {
                                     onClick={() => setIsOpen(false)}
                                 />
                             ))}
+                            <div className="pt-2 mt-2 border-t border-gray-200">
+                                <LogoutButton onClick={() => setIsOpen(false)} />
+                            </div>
                         </nav>
                     </div>
                 </div>
@@ -111,6 +133,9 @@ export default function AdminLayout({ title, children }) {
                                 active={item.active}
                             />
                         ))}
+                        <div className="pt-2 mt-2 border-t border-gray-200">
+                            <LogoutButton />
+                        </div>
                     </nav>
                 </aside>
 

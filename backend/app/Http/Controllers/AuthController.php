@@ -10,6 +10,19 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function adminLogout(Request $request)
+    {
+        // Reuse the same logout mechanics (web guard + session invalidation)
+        Auth::guard('web')->logout();
+
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        return redirect()->route('login');
+    }
+
     /*public function login(Request $request)
     {
         $request->validate([
