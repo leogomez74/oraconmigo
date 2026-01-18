@@ -185,6 +185,7 @@ class AdminController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nombre', 'like', "%{$search}%")
+                  ->orWhere('apellido', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
@@ -220,6 +221,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'nullable|string|max:255',
             'email' => 'required|email|unique:people,email',
             'pais' => 'nullable|string|max:255',
             'whatsapp' => 'required|string|max:255|unique:people,whatsapp',
@@ -246,10 +248,11 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'nullable|string|max:255',
             'email' => [
                 'required',
                 'email',
-                Rule::unique('people', 'email')->ignore($user->getKey(), $user->getKeyName()),
+                Rule::unique('people', 'email')->ignore((string) $whatsapp, 'whatsapp'),
             ],
             'pais' => 'nullable|string|max:255',
             'tipo' => 'required|in:cliente,empleado',

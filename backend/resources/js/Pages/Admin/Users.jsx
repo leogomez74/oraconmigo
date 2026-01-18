@@ -14,6 +14,7 @@ export default function Users({ users, filters }) {
     // Form handling
     const { data, setData, post, put, delete: destroy, processing, errors, reset, clearErrors } = useForm({
         nombre: '',
+        apellido: '',
         email: '',
         pais: '',
         whatsapp: '',
@@ -62,6 +63,7 @@ export default function Users({ users, filters }) {
         setSelectedUser(user);
         setData({
             nombre: user.nombre,
+            apellido: user.apellido || '',
             email: user.email,
             pais: user.pais || '',
             whatsapp: user.whatsapp || '',
@@ -210,7 +212,7 @@ export default function Users({ users, filters }) {
                                                         {user.nombre.charAt(0).toUpperCase()}
                                                     </div>
                                                     <div className="ml-4">
-                                                        <div className="text-sm font-medium text-gray-900">{user.nombre}</div>
+                                                        <div className="text-sm font-medium text-gray-900">{[user.nombre, user.apellido].filter(Boolean).join(' ')}</div>
                                                         <div className="text-sm text-gray-500">{user.email}</div>
                                                     </div>
                                                 </div>
@@ -336,6 +338,19 @@ export default function Users({ users, filters }) {
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                         {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
+                    </div>
+
+                    <div>
+                        <label htmlFor="apellido" className="block text-sm font-medium text-gray-700">Apellido</label>
+                        <input
+                            type="text"
+                            name="apellido"
+                            id="apellido"
+                            value={data.apellido}
+                            onChange={e => setData('apellido', e.target.value)}
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                        {errors.apellido && <p className="mt-1 text-sm text-red-600">{errors.apellido}</p>}
                     </div>
 
                     <div>
