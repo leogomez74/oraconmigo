@@ -15,6 +15,20 @@ const nextConfig: NextConfig = {
         source: '/sanctum/:path*',
         destination: `${backendUrl}/sanctum/:path*`,
       },
+      // Admin panel (Laravel + Inertia)
+      {
+        source: '/login',
+        destination: `${backendUrl}/login`,
+      },
+      {
+        source: '/admin/:path*',
+        destination: `${backendUrl}/admin/:path*`,
+      },
+      // Vite-built assets served by Laravel (required for /login and /admin)
+      {
+        source: '/build/:path*',
+        destination: `${backendUrl}/build/:path*`,
+      },
     ];
   },
 };
