@@ -165,6 +165,7 @@ export default function EncuestaPage() {
   const [lastSavedAnswers, setLastSavedAnswers] = useState<Record<string, AnswerValue>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({});
+  const [pendingPasoActual, setPendingPasoActual] = useState<number | null>(null);
 
   // Constantes de configuración
   const QUESTIONS_PER_STEP = 1;
@@ -234,15 +235,26 @@ export default function EncuestaPage() {
         }
         setShowThankYou(false);
         setShowWelcome(false);
-      }
 
-      if (typeof progreso.paso_actual === 'number' && progreso.paso_actual >= 1) {
-        setCurrentQuestionIndex((progreso.paso_actual - 1) * QUESTIONS_PER_STEP);
+        if (typeof progreso.paso_actual === 'number' && progreso.paso_actual >= 1) {
+          // Apply after questions are loaded so we can clamp to the current total.
+          setPendingPasoActual(progreso.paso_actual);
+        }
       }
     } catch (error) {
       console.error('Error restoring encuesta progress:', error);
     }
-  }, [QUESTIONS_PER_STEP]);
+  }, []);
+
+  useEffect(() => {
+    if (pendingPasoActual === null) return;
+    if (questionsList.length === 0) return;
+
+    const maxSteps = questionsList.length;
+    const clampedPaso = pendingPasoActual >= 1 && pendingPasoActual <= maxSteps ? pendingPasoActual : 1;
+    setCurrentQuestionIndex((clampedPaso - 1) * QUESTIONS_PER_STEP);
+    setPendingPasoActual(null);
+  }, [pendingPasoActual, questionsList.length, QUESTIONS_PER_STEP]);
 
   useEffect(() => {
     // Show the thank-you cover (003) only when coming from registration.

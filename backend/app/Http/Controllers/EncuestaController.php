@@ -98,8 +98,17 @@ class EncuestaController extends Controller
             $preguntasRespondidas = array_keys($validated['respuestas_parciales']);
 
             // Crear o actualizar progreso del usuario
+            $peopleKey = $request->user()->getKey();
+
+            if (!$peopleKey) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario inválido (sin teléfono/whatsapp)',
+                ], 400);
+            }
+
             $progreso = EncuestaProgreso::updateOrCreate(
-                ['people_id' => $request->user()->id],
+                ['people_id' => $peopleKey],
                 [
                     'paso_actual' => $validated['paso_actual'],
                     'ultimo_paso_completado' => $validated['ultimo_paso_completado'],
@@ -141,7 +150,17 @@ class EncuestaController extends Controller
     public function obtenerProgreso(Request $request)
     {
         try {
-            $progreso = EncuestaProgreso::where('people_id', $request->user()->id)->first();
+            $peopleKey = $request->user()->getKey();
+
+            if (!$peopleKey) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario inválido (sin teléfono/whatsapp)',
+                    'data' => null,
+                ], 400);
+            }
+
+            $progreso = EncuestaProgreso::where('people_id', $peopleKey)->first();
 
             return response()->json([
                 'success' => true,
@@ -168,7 +187,16 @@ class EncuestaController extends Controller
     {
         try {
             $totalPasos = $this->getEncuestaTotalPasos();
-            $progreso = EncuestaProgreso::where('people_id', $request->user()->id)->first();
+            $peopleKey = $request->user()->getKey();
+
+            if (!$peopleKey) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario inválido (sin teléfono/whatsapp)',
+                ], 400);
+            }
+
+            $progreso = EncuestaProgreso::where('people_id', $peopleKey)->first();
 
             if (!$progreso) {
                 return response()->json([
