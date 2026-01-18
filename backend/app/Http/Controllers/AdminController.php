@@ -252,9 +252,15 @@ class AdminController extends Controller
             'email' => [
                 'required',
                 'email',
-                Rule::unique('people', 'email')->ignore((string) $whatsapp, 'whatsapp'),
+                Rule::unique('people', 'email')->ignore($user->getKey(), $user->getKeyName()),
             ],
             'pais' => 'nullable|string|max:255',
+            'whatsapp' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('people', 'whatsapp')->ignore($user->getKey(), $user->getKeyName()),
+            ],
             'tipo' => 'required|in:cliente,empleado',
             'is_admin' => 'boolean',
             'clave' => 'nullable|string|min:6',
