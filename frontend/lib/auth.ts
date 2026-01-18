@@ -2,9 +2,12 @@
  * Sanctum SPA Authentication Utilities
  */
 
-// Use empty string to use Next.js proxy instead of direct backend calls
-// This avoids CORS issues
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+// IMPORTANT (Sanctum SPA): browser requests should use same-origin URLs so
+// the XSRF-TOKEN cookie is readable/sent and CSRF validation passes.
+// We therefore force same-origin (empty base URL) in the browser.
+// Server-side usage (if any) may still use NEXT_PUBLIC_API_URL.
+const CONFIGURED_API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+const API_URL = typeof window === 'undefined' ? CONFIGURED_API_URL : '';
 
 // Cache CSRF cookie to avoid duplicate requests
 let csrfCookieCached = false;
@@ -16,7 +19,7 @@ let csrfCookieCached = false;
 export async function getCsrfCookie(): Promise<void> {
   if (csrfCookieCached) return; // Skip if already obtained
 
-  await fetch(`${API_URL}/sanctum/csrf-cookie`, {
+  const res = await fetch(`${API_URL}/sanctum/csrf-cookie`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -24,6 +27,11 @@ export async function getCsrfCookie(): Promise<void> {
     },
   });
 
+  if (!res.ok) {
+    throw new Error(`Failed to get CSRF cookie (status ${res.status})`);
+  }
+
+  // Only mark cached if we successfully reached the endpoint.
   csrfCookieCached = true;
 }
 
