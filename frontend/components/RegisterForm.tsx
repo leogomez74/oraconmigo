@@ -250,7 +250,7 @@ export default function RegisterForm() {
           <label htmlFor="terms">
             Acepto los{' '}
             <Link 
-              href="/condiciones?tab=generales" 
+              href="/privacidad?tab=generales" 
               target="_blank"
               className="text-indigo-600 hover:text-indigo-800 font-medium underline"
             >
@@ -258,7 +258,7 @@ export default function RegisterForm() {
             </Link>
             {' '}y las{' '}
             <Link 
-              href="/condiciones?tab=privacidad" 
+              href="/privacidad?tab=privacidad" 
               target="_blank"
               className="text-indigo-600 hover:text-indigo-800 font-medium underline"
             >
