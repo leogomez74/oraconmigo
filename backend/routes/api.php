@@ -9,12 +9,12 @@ use App\Http\Controllers\EncuestaController;
 
 Route::post('/register', [RegistrationController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/condiciones',[RegistrationController::class, 'condiciones']);
 
 // OTP Authentication (TODO: Implement logic)
-Route::post('/otp/send', [\App\Http\Controllers\OtpController::class, 'send']);
-Route::post('/otp/verify', [\App\Http\Controllers\OtpController::class, 'verify']);
 
 // Protected routes
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);

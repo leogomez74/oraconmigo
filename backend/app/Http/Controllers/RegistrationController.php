@@ -44,4 +44,12 @@ class RegistrationController extends Controller
             ]
         ], 201);
     }
+    public function condiciones(Request $request){
+            if($request->has('aceptar') && $request->input('aceptar') === true){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Términos de privacidad aceptados.'
+                ], 200);
+        }
+    }
 }
