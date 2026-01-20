@@ -155,7 +155,6 @@ export default function TerminosGenerales() {
           <p className="mt-2">
             <strong>Email:</strong> <a href="mailto:legal@ora-app.com" className="text-indigo-600 hover:underline">legal@ora-app.com</a><br />
             <strong>Sitio web:</strong> <a href="https://www.ora-app.com/terminos" className="text-indigo-600 hover:underline">www.ora-app.com/terminos</a><br />
-            <strong>Dirección:</strong> [Dirección de tu empresa]
           </p>
         </section>
 

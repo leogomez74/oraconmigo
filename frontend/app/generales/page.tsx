@@ -1,19 +1,20 @@
 'use client';
 
-import {useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
-import TerminosPrivacidad from '@/components/legal/terminosPrivacidad';
+import TerminosGenerales from '@/components/legal/terminosGenerales';
 
-function PrivacidadContent() {
+function GeneralesContent() {
   const router = useRouter();
   // Obtiene el parametro 'tab' de la URL. Por defecto muestra 'privacidad' si así lo prefieres,
   // o puedes mantener 'generales' como defecto. Aquí he puesto 'privacidad' como defecto dado el nombre de la ruta.
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
       <div className="w-full max-w-4xl">
 
         {/* Renderizado Condicional */}
-        {<TerminosPrivacidad />}
+        {<TerminosGenerales />}
 
         {/* Botón Volver */}
         <div className="mt-8 text-center">
@@ -35,7 +36,7 @@ function PrivacidadContent() {
 export default function PrivacidadPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div></div>}>
-      <PrivacidadContent />
+      <GeneralesContent />
     </Suspense>
   );
 }

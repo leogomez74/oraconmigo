@@ -161,7 +161,6 @@ export default function TerminosPrivacidad() {
           <p className="mt-2">
             <strong>Email:</strong> <a href="mailto:privacy@ora-app.com" className="text-indigo-600 hover:underline">privacy@ora-app.com</a><br />
             <strong>Sitio web:</strong> <a href="https://www.ora-app.com/privacidad" className="text-indigo-600 hover:underline">www.ora-app.com/privacidad</a><br />
-            <strong>Dirección:</strong> [Dirección de tu empresa]
           </p>
         </section>
 
