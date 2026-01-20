@@ -251,7 +251,7 @@ export default function RegisterForm() {
             Acepto los{' '}
             <Link 
               href="/privacidad?tab=generales" 
-              target="_blank"
+              target="_self"
               className="text-indigo-600 hover:text-indigo-800 font-medium underline"
             >
               Términos Generales
@@ -259,7 +259,7 @@ export default function RegisterForm() {
             {' '}y las{' '}
             <Link 
               href="/privacidad?tab=privacidad" 
-              target="_blank"
+              target="_self"
               className="text-indigo-600 hover:text-indigo-800 font-medium underline"
             >
               Políticas de Privacidad
