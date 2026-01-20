@@ -45,7 +45,7 @@ function PrivacidadContent() {
         {/* Botón Volver */}
         <div className="mt-8 text-center">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/')}
             className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center justify-center gap-2 mx-auto hover:underline transition-all"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
