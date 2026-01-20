@@ -9,7 +9,7 @@ use App\Http\Controllers\EncuestaController;
 
 Route::post('/register', [RegistrationController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/condiciones',[RegistrationController::class, 'condiciones']);
+Route::post('/privacidad',[RegistrationController::class, 'condiciones']);
 
 // OTP Authentication (TODO: Implement logic)
 

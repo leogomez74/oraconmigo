@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CountrySelect from '@/components/CountrySelect';
 import { register, getCsrfCookie } from '@/lib/auth';
+import Link from 'next/link';
 import { countries } from '@/lib/countries';
 
 export default function RegisterForm() {
@@ -238,6 +239,34 @@ export default function RegisterForm() {
             </button>
           </div>
         </form>
+        <div className="flex items-start gap-2 mt-4 text-sm text-gray-600">
+          <input 
+            type="checkbox" 
+            id="terms"
+            name="acepta_terminos"
+            required
+            className="mt-1 rounded text-indigo-600 focus:ring-indigo-500"
+          />
+          <label htmlFor="terms">
+            Acepto los{' '}
+            <Link 
+              href="/condiciones?tab=generales" 
+              target="_blank"
+              className="text-indigo-600 hover:text-indigo-800 font-medium underline"
+            >
+              Términos Generales
+            </Link>
+            {' '}y las{' '}
+            <Link 
+              href="/condiciones?tab=privacidad" 
+              target="_blank"
+              className="text-indigo-600 hover:text-indigo-800 font-medium underline"
+            >
+              Políticas de Privacidad
+            </Link>
+            {' '}de Oraconmigo.
+          </label>
+        </div>
       </div>
     </div>
   );

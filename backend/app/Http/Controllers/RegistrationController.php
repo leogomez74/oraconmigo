@@ -44,12 +44,24 @@ class RegistrationController extends Controller
             ]
         ], 201);
     }
-    public function condiciones(Request $request){
-            if($request->has('aceptar') && $request->input('aceptar') === true){
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Términos de privacidad aceptados.'
-                ], 200);
-        }
+    /**
+     * Valida la aceptación de los términos y condiciones.
+     */
+    public function condiciones(Request $request)
+    {
+        // Validación estricta: El campo 'acepta_terminos' debe ser verdadero
+        $request->validate([
+            'acepta_terminos' => 'required|accepted',
+        ]);
+
+        // Opcional: Si el usuario ya está autenticado, puedes guardar la fecha
+        // if ($request->user()) {
+        //     $request->user()->forceFill(['terms_accepted_at' => now()])->save();
+        // }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Términos y condiciones aceptados correctamente.',
+        ], 200);
     }
 }
